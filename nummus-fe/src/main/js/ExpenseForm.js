@@ -1,10 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import TextField from '@material-ui/core/TextField';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import Button from '@material-ui/core/Button';
-import SaveIcon from '@material-ui/icons/Save'
 
 
 class ExpenseForm extends Component {
@@ -15,13 +10,13 @@ class ExpenseForm extends Component {
   }
 
   static defaultProps = {
-    onSubmit: (submit) => console.warn("Unhadled onSubmit"),
+    onSubmit: (e, submit) => console.warn("Unhadled onSubmit"),
     categories: [],
   };
 
   static propTypes = {
     categories: PropTypes.array,
-    onSubmit: PropTypes.fun,
+    onSubmit: PropTypes.func,
   };
 
   captureInput(event) {
@@ -37,33 +32,38 @@ class ExpenseForm extends Component {
 
   formSubmitted() {
     let onSubmit = this.props.onSubmit;
-    return (event) =>
-        onSubmit(event, this.state);
+    return (event) => onSubmit(event, this.state);
   }
 
   render() {
     const categories = this.props.categories.map((category, index) => {
-      return <MenuItem key={index} value={category.id}>{category.name}</MenuItem>
+      return <option key={index} value={category.id}>{category.name}</option>
     });
 
     return (
         <form className='expense-form'>
-          <TextField className='expense-form-amount' label='Amount' type='text' name='amount' onChange={this.captureInput.bind(this)}/>
+          <label> Amount
+            <input
+              type='text'
+              className='expense-form-amount'
+              name='amount'
+              onChange={this.captureInput.bind(this)}
+            />
+          </label>
 
-          <Select className='expense-form-category' label='Category' name='category' onChange={this.categorySelected.bind(this)}>
-            {categories}
-          </Select>
+          <label>Category
+            <select className='expense-form-category' name='category' onChange={this.categorySelected.bind(this)}>
+              {categories}
+            </select>
+          </label>
 
-          <Button
+          <input
+            type='submit'
             className='expense-form-submit'
-            variant="contained"
-            size="small"
+            value='Save'
             onSubmit={this.formSubmitted().bind(this)}
-            onClick={this.formSubmitted().bind(this)}>
-
-            <SaveIcon />
-            Save
-          </Button>
+            onClick={this.formSubmitted().bind(this)}
+          />
         </form>
     );
   }

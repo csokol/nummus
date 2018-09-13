@@ -4,16 +4,14 @@ import ExpenseForm from '../../main/js/ExpenseForm';
 import {shallow} from 'enzyme';
 import { configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import Select from '@material-ui/core/Select';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
 
 configure({ adapter: new Adapter() });
 
 test('stores amount on state', () => {
+  const nothing = function() {};
   const component = shallow(<ExpenseForm/>);
 
-  const amount = component.find(TextField);
+  const amount = component.find('input[type="text"]');
   amount.simulate('change', {target: {name: "amount", value: '100.50'}});
 
   expect(component.state()).toEqual({
@@ -31,7 +29,7 @@ test('stores category on state', () => {
           categories={categories}
       />);
 
-  const category = component.find(Select);
+  const category = component.find('select');
   category.simulate('change', {target: {name: "category", value: '1'}});
 
   expect(component.state()).toEqual({
@@ -51,12 +49,12 @@ test('runs callback on submit', () => {
           onSubmit={(e, state) => finalState = state}
       />);
 
-  const category = component.find(Select);
+  const category = component.find('select');
   category.simulate('change', {target: {name: "category", value: '1'}});
-  const amount = component.find(TextField);
+  const amount = component.find('input[type="text"]');
   amount.simulate('change', {target: {name: "amount", value: '100.50'}});
 
-  component.find(Button).simulate("submit");
+  component.find('input[type="submit"]').simulate("submit");
 
   expect(finalState).toEqual({
     category: { name: 'fun money', id: 1 },
@@ -77,12 +75,12 @@ test('runs callback on click', () => {
           onSubmit={(e, state) => finalState = state}
       />);
 
-  const category = component.find(Select);
+  const category = component.find('select');
   category.simulate('change', {target: {name: "category", value: '1'}});
-  const amount = component.find(TextField);
+  const amount = component.find('input[type="text"]');
   amount.simulate('change', {target: {name: "amount", value: '100.50'}});
 
-  component.find(Button).simulate("click");
+  component.find('input[type="submit"]').simulate("click");
 
   expect(finalState).toEqual({
     category: { name: 'fun money', id: 1 },

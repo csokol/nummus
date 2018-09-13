@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import '../css/App.css';
 import '../css/index.css';
 import ExpenseForm from "./ExpenseForm";
-import CssBaseline from '@material-ui/core/CssBaseline';
 
 
 class App extends Component {
@@ -17,14 +16,11 @@ class App extends Component {
 
   render() {
     return (
-        <React.Fragment>
-          <CssBaseline />
-          <div className="container">
-            <ExpenseForm
-                categories={this.categories}
-            />
-          </div>
-        </React.Fragment>
+      <div className="container">
+        <ExpenseForm
+            categories={this.categories}
+        />
+      </div>
     );
   }
 }
