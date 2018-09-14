@@ -44,7 +44,7 @@ class ExpenseForm extends Component {
         <form className='expense-form'>
           <label> Amount
             <input
-              type='text'
+              type='number'
               className='expense-form-amount'
               name='amount'
               onChange={this.captureInput.bind(this)}

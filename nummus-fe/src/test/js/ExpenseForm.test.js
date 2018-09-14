@@ -7,11 +7,13 @@ import Adapter from 'enzyme-adapter-react-16';
 
 configure({ adapter: new Adapter() });
 
+const amountSelector = 'input[type="number"]';
+
 test('stores amount on state', () => {
   const nothing = function() {};
   const component = shallow(<ExpenseForm/>);
 
-  const amount = component.find('input[type="text"]');
+  const amount = component.find(amountSelector);
   amount.simulate('change', {target: {name: "amount", value: '100.50'}});
 
   expect(component.state()).toEqual({
@@ -51,7 +53,7 @@ test('runs callback on submit', () => {
 
   const category = component.find('select');
   category.simulate('change', {target: {name: "category", value: '1'}});
-  const amount = component.find('input[type="text"]');
+  const amount = component.find(amountSelector);
   amount.simulate('change', {target: {name: "amount", value: '100.50'}});
 
   component.find('input[type="submit"]').simulate("submit");
@@ -77,7 +79,7 @@ test('runs callback on click', () => {
 
   const category = component.find('select');
   category.simulate('change', {target: {name: "category", value: '1'}});
-  const amount = component.find('input[type="text"]');
+  const amount = component.find(amountSelector);
   amount.simulate('change', {target: {name: "amount", value: '100.50'}});
 
   component.find('input[type="submit"]').simulate("click");
