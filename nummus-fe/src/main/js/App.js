@@ -3,7 +3,6 @@ import '../css/foundation.min.css';
 import '../css/App.css';
 import '../css/index.css';
 import ExpenseForm from "./ExpenseForm";
-import FoundationDemo from "./FoundationDemo";
 
 
 class App extends Component {

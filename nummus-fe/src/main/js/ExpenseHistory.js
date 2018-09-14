@@ -16,8 +16,21 @@ class ExpenseHistory extends Component {
     categoriesById: PropTypes.object,
   };
 
+  makeItem(expense, index) {
+    let category = this.props.categoriesById[expense.categoryId];
+    return (<tr key={index}>
+      <td>{expense.amount}</td>
+      <td>{category.name}</td>
+    </tr>)
+  }
+
   render() {
-    return (<ul></ul>);
+    const rows = this.props.expenses.map(this.makeItem.bind(this));
+    return (<table>
+      <tbody>
+        {rows}
+      </tbody>
+    </table>);
   }
 }
 

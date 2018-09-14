@@ -25,8 +25,8 @@ class ExpenseForm extends Component {
   }
 
   categorySelected(event) {
-    let {name, value} = event.target;
-    let categorySelected = this.props.categories.filter(c => c.id === parseInt(value))[0];
+    let {value} = event.target;
+    let categorySelected = this.props.categories.filter(c => c.id === parseInt(value, 10))[0];
     this.setState({category: categorySelected});
   }
 
@@ -48,11 +48,16 @@ class ExpenseForm extends Component {
               className='expense-form-amount'
               name='amount'
               onChange={this.captureInput.bind(this)}
+              ref={(node) => this._amount = node}
             />
           </label>
 
           <label>Category
-            <select className='expense-form-category' name='category' onChange={this.categorySelected.bind(this)}>
+            <select
+              className='expense-form-category' name='category'
+              onChange={this.categorySelected.bind(this)}
+              ref={(node) => this._category = node}
+            >
               {categories}
             </select>
           </label>
@@ -63,6 +68,7 @@ class ExpenseForm extends Component {
             value='Save'
             onSubmit={this.formSubmitted().bind(this)}
             onClick={this.formSubmitted().bind(this)}
+            ref={(node) => this._submit = node}
           />
         </form>
     );

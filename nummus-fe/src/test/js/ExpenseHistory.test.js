@@ -1,23 +1,30 @@
 // Link.react.test.js
 import React from 'react';
-import ExpenseForm from '../../main/js/ExpenseForm';
-import {shallow} from 'enzyme';
-import { configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
+import ExpenseHistory from '../../main/js/ExpenseHistory';
 
-configure({ adapter: new Adapter() });
+import ReactDOM from 'react-dom';
+import ReactTestUtils from 'react-dom/test-utils';
 
-const amountSelector = 'input[type="number"]';
 
-test('stores amount on state', () => {
-  const nothing = function() {};
-  const component = shallow(<ExpenseForm/>);
+test('shows expenses', () => {
+  const categoriesById = {
+    1: { name: 'fun money', id: 1 },
+    2: { name: 'groceries', id: 2 },
+  };
+  const expenses = [
+    {amount: 1000, categoryId: 1},
+    {amount: 2000, categoryId: 2},
+  ];
 
-  const amount = component.find(amountSelector);
-  amount.simulate('change', {target: {name: "amount", value: '100.50'}});
+  const div = document.createElement('div');
+  const component = ReactDOM.render(
+      <ExpenseHistory
+          categoriesById={categoriesById}
+          expenses={expenses}
+      />, div);
 
-  expect(component.state()).toEqual({
-    amount: '100.50',
-  });
+  let items = ReactTestUtils.scryRenderedDOMComponentsWithTag(component, 'tr');
+  expect(items).toHaveLength(2);
+  ReactDOM.unmountComponentAtNode(div);
 });
 
