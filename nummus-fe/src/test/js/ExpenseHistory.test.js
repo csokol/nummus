@@ -7,13 +7,12 @@ import ReactTestUtils from 'react-dom/test-utils';
 
 
 test('shows expenses', () => {
-  const categoriesById = {
-    1: { name: 'fun money', id: 1 },
-    2: { name: 'groceries', id: 2 },
-  };
+  const categoriesById = new Map();
+  categoriesById.set('1', { name: 'fun money', id: 1 });
+  categoriesById.set('2', { name: 'groceries', id: 2 });
   const expenses = [
-    {amount: 1000, categoryId: 1},
-    {amount: 2000, categoryId: 2},
+    {amount: 1000, categoryId: '1'},
+    {amount: 2000, categoryId: '2'},
   ];
 
   const div = document.createElement('div');

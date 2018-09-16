@@ -4,6 +4,6 @@ body {
   font-family: sans-serif;
 }
 
-.expense-form {
-
+.is-visible {
+  display: block !important;
 }

@@ -7,32 +7,53 @@ class ExpenseForm extends Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.errors = [];
   }
 
   static defaultProps = {
     onSubmit: (e, submit) => console.warn("Unhadled onSubmit"),
+    onValidationError: () => console.warn("Unhadled validation error"),
     categories: [],
   };
 
   static propTypes = {
     categories: PropTypes.array,
     onSubmit: PropTypes.func,
+    onValidationError: PropTypes.func,
   };
 
   captureInput(event) {
     let {name, value} = event.target;
-    this.setState({[name]: value});
+    this.setState({[name]: value, errors: []});
   }
 
   categorySelected(event) {
     let {value} = event.target;
     let categorySelected = this.props.categories.filter(c => c.id === parseInt(value, 10))[0];
-    this.setState({category: categorySelected});
+    this.setState({category: categorySelected, errors: []});
   }
 
   formSubmitted() {
     let onSubmit = this.props.onSubmit;
-    return (event) => onSubmit(event, this.state);
+    return (event) => {
+      const {amount, category} = this.state;
+      const validationErrors = [];
+      if (!category) {
+        validationErrors.push({where: "category", type: "empty_field"});
+      }
+      if (!amount) {
+        validationErrors.push({where: "amount", type: "empty_field"});
+      }
+      if (validationErrors.length !== 0) {
+        event.preventDefault();
+        this.setState({
+          errors: { amount: true }
+        });
+        this.props.onValidationError(validationErrors);
+        return;
+      }
+      onSubmit(event, this.state);
+    }
   }
 
   render() {
@@ -42,22 +63,32 @@ class ExpenseForm extends Component {
 
     return (
         <form className='expense-form'>
-          <label> Amount
-            <input
-              type='number'
-              className='expense-form-amount'
-              name='amount'
-              onChange={this.captureInput.bind(this)}
-              ref={(node) => this._amount = node}
-            />
+          <label>
+            <div>
+            Amount
+              <div className="input-group">
+                <input
+                  type='number'
+                  className="input-group-field"
+                  name='amount'
+                  onChange={this.captureInput.bind(this)}
+                  ref={(node) => this._amount = node}
+                />
+              </div>
+              <span className={this.errors.amount ? 'form-error is-visible' : 'form-error'}>
+                Amount cannot be empty
+              </span>
+            </div>
           </label>
 
           <label>Category
             <select
+              defaultValue={0}
               className='expense-form-category' name='category'
               onChange={this.categorySelected.bind(this)}
               ref={(node) => this._category = node}
             >
+              <option value={0} />
               {categories}
             </select>
           </label>

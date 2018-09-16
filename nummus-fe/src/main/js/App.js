@@ -3,6 +3,9 @@ import '../css/foundation.min.css';
 import '../css/App.css';
 import '../css/index.css';
 import ExpenseForm from "./ExpenseForm";
+import ReactDOM from 'react-dom';
+import ReactTestUtils from 'react-dom/test-utils';
+import ExpenseHistory from "./ExpenseHistory";
 
 
 class App extends Component {
@@ -12,7 +15,9 @@ class App extends Component {
     this.categories = [
       { name: 'fun money', id: 1 },
       { name: 'groceries', id: 2 },
-    ]
+    ];
+    this.categoriesById = this.categories.reduce((map, v) => map.set(v.id, v), new Map());
+    this.expenses = [];
   }
 
   render() {
@@ -25,14 +30,28 @@ class App extends Component {
           <div className="large-6 medium-6 cell">
             <ExpenseForm
                 categories={this.categories}
+                onSubmit={this.expenseAdded.bind(this)}
             />
           </div>
           <div className="large-6 medium-6 cell">
+            <ExpenseHistory
+                categoriesById={this.categoriesById}
+                expenses={this.expenses}
+                ref={(node) => this._expenseHistory = node}
+            />
           </div>
         </div>
       </div>
 
     );
+  }
+
+  expenseAdded(event, state) {
+    event.preventDefault();
+    this.expenses.push({amount: state.amount, categoryId: state.category.id});
+    this._expenseHistory.setState({
+      expenses: this.expenses
+    });
   }
 }
 

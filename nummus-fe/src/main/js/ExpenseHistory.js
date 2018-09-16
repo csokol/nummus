@@ -17,7 +17,7 @@ class ExpenseHistory extends Component {
   };
 
   makeItem(expense, index) {
-    let category = this.props.categoriesById[expense.categoryId];
+    let category = this.props.categoriesById.get(expense.categoryId);
     return (<tr key={index}>
       <td>{expense.amount}</td>
       <td>{category.name}</td>

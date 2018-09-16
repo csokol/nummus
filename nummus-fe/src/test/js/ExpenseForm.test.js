@@ -10,36 +10,38 @@ const categories = [
   { name: 'groceries', id: 2 },
 ];
 
-test('stores amount on state', () => {
+it('stores amount on state', () => {
   const div = document.createElement('div');
   const component = ReactDOM.render(<ExpenseForm/>, div);
 
-  component._amount.value = '100.50';
-  ReactTestUtils.Simulate.change(component._amount);
+  const formControl = new ExpenseFormControl(component);
+  formControl.setAmount('100.50');
 
   expect(component.state).toEqual({
     amount: '100.50',
+    errors: [],
   });
   ReactDOM.unmountComponentAtNode(div);
 });
 
-test('stores category on state', () => {
+it('stores category on state', () => {
   const div = document.createElement('div');
   const component = ReactDOM.render(
       <ExpenseForm
           categories={categories}
       />, div);
 
-  component._category.value = '1';
-  ReactTestUtils.Simulate.change(component._category);
+  const formControl = new ExpenseFormControl(component);
+  formControl.setCategory('1');
 
   expect(component.state).toEqual({
     category: { name: 'fun money', id: 1 },
+    errors: [],
   });
   ReactDOM.unmountComponentAtNode(div);
 });
 
-test('runs callback on submit', () => {
+it('runs callback on submit', () => {
   let finalState = null;
   const div = document.createElement('div');
   const component = ReactDOM.render(
@@ -48,22 +50,24 @@ test('runs callback on submit', () => {
           onSubmit={(e, state) => finalState = state}
       />, div);
 
-  component._category.value = '1';
-  ReactTestUtils.Simulate.change(component._category);
-  component._amount.value = '100.50';
-  ReactTestUtils.Simulate.change(component._amount);
+  const formControl = new ExpenseFormControl(component);
 
-  ReactTestUtils.Simulate.submit(component._submit);
+  formControl.setCategory('1');
+  formControl.setAmount('100.50');
+
+  formControl.submit();
+
 
   expect(finalState).toEqual({
     category: { name: 'fun money', id: 1 },
     amount: '100.50',
+    errors: [],
   });
 
   ReactDOM.unmountComponentAtNode(div);
 });
 
-test('runs callback on click', () => {
+it('runs callback on click', () => {
   let finalState = null;
   const div = document.createElement('div');
   const component = ReactDOM.render(
@@ -72,17 +76,80 @@ test('runs callback on click', () => {
           onSubmit={(e, state) => finalState = state}
       />, div);
 
-  component._category.value = '1';
-  ReactTestUtils.Simulate.change(component._category);
-  component._amount.value = '100.50';
-  ReactTestUtils.Simulate.change(component._amount);
+  const formControl = new ExpenseFormControl(component);
 
-  ReactTestUtils.Simulate.click(component._submit);
+  formControl.setCategory('1');
+  formControl.setAmount('100.50');
+
+  formControl.clickSubmit();
 
   expect(finalState).toEqual({
     category: { name: 'fun money', id: 1 },
     amount: '100.50',
+    errors: [],
   });
 
   ReactDOM.unmountComponentAtNode(div);
 });
+
+it('validates category', () => {
+  const div = document.createElement('div');
+  let captured = null;
+  const component = ReactDOM.render(
+    <ExpenseForm
+        onValidationError={(error) => captured = error}
+    />, div);
+
+  const formControl = new ExpenseFormControl(component);
+  formControl.setAmount('100.50');
+  formControl.submit();
+
+  expect(captured).toEqual(
+      [{"type": "empty_field", "where": "category"}]
+  );
+});
+
+it('validates amount', () => {
+  const div = document.createElement('div');
+  let captured = null;
+  const component = ReactDOM.render(
+    <ExpenseForm
+        onValidationError={(error) => captured = error}
+        categories={categories}
+    />, div);
+
+  const formControl = new ExpenseFormControl(component);
+  formControl.setCategory('1');
+  formControl.submit();
+
+  expect(captured).toEqual(
+      [{"type": "empty_field", "where": "amount"}]
+  );
+});
+
+
+class ExpenseFormControl {
+  constructor(component) {
+    this.component = component;
+  }
+
+  setCategory(categoryId) {
+    this.component._category.value = categoryId;
+    ReactTestUtils.Simulate.change(this.component._category);
+  }
+
+  setAmount(amount) {
+    this.component._amount.value = amount;
+    ReactTestUtils.Simulate.change(this.component._amount);
+  }
+
+  clickSubmit() {
+    ReactTestUtils.Simulate.click(this.component._submit);
+  }
+
+  submit() {
+    ReactTestUtils.Simulate.submit(this.component._submit);
+  }
+}
+
+export default ExpenseFormControl;
