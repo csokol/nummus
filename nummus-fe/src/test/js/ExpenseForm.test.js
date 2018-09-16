@@ -10,6 +10,8 @@ const categories = [
   { name: 'groceries', id: 2 },
 ];
 
+const unit = (x) => x;
+
 it('stores amount on state', () => {
   const div = document.createElement('div');
   const component = ReactDOM.render(<ExpenseForm/>, div);
@@ -19,7 +21,6 @@ it('stores amount on state', () => {
 
   expect(component.state).toEqual({
     amount: '100.50',
-    errors: [],
   });
   ReactDOM.unmountComponentAtNode(div);
 });
@@ -36,7 +37,6 @@ it('stores category on state', () => {
 
   expect(component.state).toEqual({
     category: { name: 'fun money', id: 1 },
-    errors: [],
   });
   ReactDOM.unmountComponentAtNode(div);
 });
@@ -57,11 +57,9 @@ it('runs callback on submit', () => {
 
   formControl.submit();
 
-
   expect(finalState).toEqual({
     category: { name: 'fun money', id: 1 },
     amount: '100.50',
-    errors: [],
   });
 
   ReactDOM.unmountComponentAtNode(div);
@@ -86,7 +84,6 @@ it('runs callback on click', () => {
   expect(finalState).toEqual({
     category: { name: 'fun money', id: 1 },
     amount: '100.50',
-    errors: [],
   });
 
   ReactDOM.unmountComponentAtNode(div);
@@ -103,6 +100,9 @@ it('validates category', () => {
   const formControl = new ExpenseFormControl(component);
   formControl.setAmount('100.50');
   formControl.submit();
+
+  let {category: {empty}} = component._validationMessages;
+  expect(empty.className).toEqual('form-error is-visible');
 
   expect(captured).toEqual(
       [{"type": "empty_field", "where": "category"}]
@@ -121,10 +121,30 @@ it('validates amount', () => {
   const formControl = new ExpenseFormControl(component);
   formControl.setCategory('1');
   formControl.submit();
+  let {amount: {empty}} = component._validationMessages;
+  expect(empty.className).toEqual('form-error is-visible');
 
   expect(captured).toEqual(
       [{"type": "empty_field", "where": "amount"}]
   );
+});
+
+it('removes error messages after fixing', () => {
+  const div = document.createElement('div');
+  const component = ReactDOM.render(
+    <ExpenseForm
+        onValidationError={unit}
+        categories={categories}
+    />, div);
+
+  const formControl = new ExpenseFormControl(component);
+  formControl.submit();
+
+  formControl.setAmount('100.5');
+  formControl.setCategory('1');
+  let {amount, category} = component._validationMessages;
+  expect(amount.empty.className).toEqual('form-error');
+  expect(category.empty.className).toEqual('form-error');
 });
 
 

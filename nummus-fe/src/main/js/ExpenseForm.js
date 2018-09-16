@@ -7,7 +7,7 @@ class ExpenseForm extends Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.errors = [];
+    this._validationMessages = {};
   }
 
   static defaultProps = {
@@ -24,13 +24,15 @@ class ExpenseForm extends Component {
 
   captureInput(event) {
     let {name, value} = event.target;
-    this.setState({[name]: value, errors: []});
+    this._validationMessages.amount.empty.className = 'form-error';
+    this.setState({[name]: value});
   }
 
   categorySelected(event) {
     let {value} = event.target;
     let categorySelected = this.props.categories.filter(c => c.id === parseInt(value, 10))[0];
-    this.setState({category: categorySelected, errors: []});
+    this._validationMessages.category.empty.className = 'form-error';
+    this.setState({category: categorySelected});
   }
 
   formSubmitted() {
@@ -40,15 +42,14 @@ class ExpenseForm extends Component {
       const validationErrors = [];
       if (!category) {
         validationErrors.push({where: "category", type: "empty_field"});
+        this._validationMessages.category.empty.className = 'form-error is-visible';
       }
       if (!amount) {
         validationErrors.push({where: "amount", type: "empty_field"});
+        this._validationMessages.amount.empty.className = 'form-error is-visible';
       }
       if (validationErrors.length !== 0) {
         event.preventDefault();
-        this.setState({
-          errors: { amount: true }
-        });
         this.props.onValidationError(validationErrors);
         return;
       }
@@ -75,22 +76,28 @@ class ExpenseForm extends Component {
                   ref={(node) => this._amount = node}
                 />
               </div>
-              <span className={this.errors.amount ? 'form-error is-visible' : 'form-error'}>
+              <span ref={node => this._validationMessages.amount = {empty: node}} className='form-error'>
                 Amount cannot be empty
               </span>
             </div>
           </label>
 
-          <label>Category
-            <select
-              defaultValue={0}
-              className='expense-form-category' name='category'
-              onChange={this.categorySelected.bind(this)}
-              ref={(node) => this._category = node}
-            >
-              <option value={0} />
-              {categories}
-            </select>
+          <label>
+            <div>
+              Category
+              <select
+                defaultValue={0}
+                className='expense-form-category' name='category'
+                onChange={this.categorySelected.bind(this)}
+                ref={(node) => this._category = node}
+              >
+                <option value={0} />
+                {categories}
+              </select>
+              <span ref={node => this._validationMessages.category = {empty: node}} className='form-error'>
+                  Category cannot be empty
+              </span>
+            </div>
           </label>
 
           <input
