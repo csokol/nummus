@@ -1,6 +1,7 @@
 // Link.react.test.js
 import React from 'react';
 import ExpenseHistory from '../../../../main/js/application/components/ExpenseHistory';
+import Expense from '../../../../main/js/domain/Expense';
 
 import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
@@ -8,11 +9,11 @@ import ReactTestUtils from 'react-dom/test-utils';
 
 test('shows expenses', () => {
   const categoriesById = new Map();
-  categoriesById.set('1', { name: 'fun money', id: 1 });
-  categoriesById.set('2', { name: 'groceries', id: 2 });
+  categoriesById.set(1, { name: 'fun money', id: 1 });
+  categoriesById.set(2, { name: 'groceries', id: 2 });
   const expenses = [
-    {amount: 1000, categoryId: '1'},
-    {amount: 2000, categoryId: '2'},
+    new Expense(1000, 1),
+    new Expense(2000, 2),
   ];
 
   const div = document.createElement('div');

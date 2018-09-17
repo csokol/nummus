@@ -1,4 +1,7 @@
 - expense form validation (done)
-- local storage
+- local storage (done)
+- delete expense
+- add date
+- aggregates (by month/categories?)
 - backend sync
 - make it responsive

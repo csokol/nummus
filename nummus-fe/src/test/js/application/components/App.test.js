@@ -64,9 +64,25 @@ it('stores expense in localstorage', () => {
   expenseForm.submit();
 
   let keys = Array.from(localStorageMock.store.keys());
-  expect(keys).toHaveLength(1);
-  let item = localStorageMock.getItem(keys[0]);
+  expect(keys).toHaveLength(2);
+  let item = localStorageMock.getItem('nummus.io.expenses.foo');
 
   expect(item).toEqual(JSON.stringify(new Expense(10000, 1)));
   localStorageMock.clear();
+});
+
+it('puts localstorage data into history', () => {
+  const nummusPrefix = "nummus.io.";
+  const expenseKeysKey = nummusPrefix + "expenseKeys";
+
+  const div = document.createElement('div');
+  localStorageMock.setItem('nummus.io.expenses.foo', JSON.stringify(new Expense(10000, 1)));
+  localStorageMock.setItem('nummus.io.expenses.bar', JSON.stringify(new Expense(10000, 1)));
+  localStorageMock.setItem(expenseKeysKey, JSON.stringify(['nummus.io.expenses.foo', 'nummus.io.expenses.bar']));
+  let app = ReactDOM.render(<App />, div);
+
+  let historyComponent = ReactTestUtils.findRenderedComponentWithType(app, ExpenseHistory);
+
+  let items = ReactTestUtils.scryRenderedDOMComponentsWithTag(historyComponent, 'tr');
+  expect(items).toHaveLength(2);
 });

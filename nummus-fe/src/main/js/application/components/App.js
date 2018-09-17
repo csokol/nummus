@@ -6,6 +6,9 @@ import ExpenseForm from "./ExpenseForm";
 import ExpenseHistory from "./ExpenseHistory";
 import Expense from "../../domain/Expense";
 
+const nummusPrefix = "nummus.io.";
+const expenseKeysKey = nummusPrefix + "expenseKeys";
+
 class App extends Component {
 
   constructor(props) {
@@ -15,7 +18,10 @@ class App extends Component {
       { name: 'groceries', id: 2 },
     ];
     this.categoriesById = this.categories.reduce((map, v) => map.set(v.id, v), new Map());
-    this.expenses = [];
+    this.expenses = this.getExpenseKeys()
+      .map(localStorage.getItem.bind(localStorage))
+      .map(JSON.parse)
+      .map(obj => new Expense(obj.amountCents, obj.categoryId));
   }
 
   render() {
@@ -45,13 +51,24 @@ class App extends Component {
   }
 
   expenseAdded(event, state) {
-    let expense = Expense.createFromState(state);
-    localStorage.setItem("foo", JSON.stringify(expense));
     event.preventDefault();
-    this.expenses.push({amount: state.amount, categoryId: state.category.id});
+
+    let expense = Expense.createFromState(state);
+    let key = nummusPrefix + "expenses.foo";
+    let expenseKeys = this.getExpenseKeys();
+    localStorage.setItem(key, JSON.stringify(expense));
+    expenseKeys.push(key);
+    localStorage.setItem(expenseKeysKey, JSON.stringify(expenseKeys));
+
+    this.expenses.push(expense);
     this._expenseHistory.setState({
       expenses: this.expenses
     });
+  }
+
+  getExpenseKeys() {
+    const arrayJson = localStorage.getItem(expenseKeysKey) || '[]';
+    return JSON.parse(arrayJson);
   }
 }
 

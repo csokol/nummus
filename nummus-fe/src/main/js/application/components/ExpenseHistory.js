@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Expense from "../../domain/Expense";
 
 
 class ExpenseHistory extends Component {
@@ -8,14 +9,14 @@ class ExpenseHistory extends Component {
   };
 
   static propTypes = {
-    expenses: PropTypes.array,
+    expenses: PropTypes.arrayOf(PropTypes.instanceOf(Expense)),
     categoriesById: PropTypes.object,
   };
 
   makeItem(expense, index) {
     let category = this.props.categoriesById.get(expense.categoryId);
     return (<tr key={index}>
-      <td>{expense.amount}</td>
+      <td>{expense.amountAsString()}</td>
       <td>{category.name}</td>
     </tr>)
   }

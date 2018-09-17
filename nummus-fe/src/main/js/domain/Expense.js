@@ -13,6 +13,12 @@ class Expense {
 
     return new Expense(amountInt, categoryId);
   }
+
+  amountAsString() {
+    let cents = this.amountCents % 10;
+    let units = this.amountCents / 10;
+    return `${units}.${cents}`;
+  }
 }
 
 export default Expense;
