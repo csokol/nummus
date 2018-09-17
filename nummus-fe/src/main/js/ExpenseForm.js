@@ -38,7 +38,8 @@ class ExpenseForm extends Component {
   formSubmitted() {
     let onSubmit = this.props.onSubmit;
     return (event) => {
-      const {amount, category} = this.state;
+      let state = this.state;
+      const {amount, category} = state;
       const validationErrors = [];
       if (!category) {
         validationErrors.push({where: "category", type: "empty_field"});
@@ -53,7 +54,10 @@ class ExpenseForm extends Component {
         this.props.onValidationError(validationErrors);
         return;
       }
-      onSubmit(event, this.state);
+      this.setState({amount: null, category: null});
+      this._category.value = null;
+      this._amount.value = null;
+      onSubmit(event, state);
     }
   }
 

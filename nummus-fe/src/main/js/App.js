@@ -3,8 +3,6 @@ import '../css/foundation.min.css';
 import '../css/App.css';
 import '../css/index.css';
 import ExpenseForm from "./ExpenseForm";
-import ReactDOM from 'react-dom';
-import ReactTestUtils from 'react-dom/test-utils';
 import ExpenseHistory from "./ExpenseHistory";
 
 

@@ -4,14 +4,16 @@ import App from '../../main/js/App';
 import ExpenseForm from '../../main/js/ExpenseForm';
 import ExpenseHistory from '../../main/js/ExpenseHistory';
 import ExpenseFormControl from './ExpenseForm.test';
-import {shallow} from 'enzyme';
-import { configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
 import ReactTestUtils from "react-dom/test-utils";
-import TestRenderer from 'react-test-renderer'; // ES6
 
 
-configure({ adapter: new Adapter() });
+const localStorageMock = {
+  getItem: jest.fn(),
+  setItem: jest.fn(),
+  clear: jest.fn()
+};
+global.localStorage = localStorageMock
+
 
 it('renders without crashing', () => {
   const div = document.createElement('div');

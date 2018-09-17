@@ -1,4 +1,4 @@
-- expense form validation
+- expense form validation (done)
 - local storage
 - backend sync
 - make it responsive

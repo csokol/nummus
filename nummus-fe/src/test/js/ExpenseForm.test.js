@@ -147,6 +147,26 @@ it('removes error messages after fixing', () => {
   expect(category.empty.className).toEqual('form-error');
 });
 
+it('clears form after submit', () => {
+  const div = document.createElement('div');
+  const component = ReactDOM.render(
+    <ExpenseForm
+      onValidationError={unit}
+      onSubmit={unit}
+      categories={categories}
+    />, div);
+  const formControl = new ExpenseFormControl(component);
+
+  formControl.setAmount('100.5');
+  formControl.setCategory('1');
+  formControl.submit();
+
+  expect(component.state).toEqual({amount: null, category: null});
+  expect(component._category.value).toEqual('0');
+  expect(component._amount.value).toEqual('');
+});
+
+
 
 class ExpenseFormControl {
   constructor(component) {

@@ -4,10 +4,6 @@ import PropTypes from 'prop-types';
 
 class ExpenseHistory extends Component {
 
-  constructor(props) {
-    super(props);
-  }
-
   static defaultProps = {
   };
 
