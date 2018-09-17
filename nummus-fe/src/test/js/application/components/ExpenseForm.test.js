@@ -1,6 +1,6 @@
 // Link.react.test.js
 import React from 'react';
-import ExpenseForm from '../../main/js/ExpenseForm';
+import ExpenseForm from '../../../../main/js/application/components/ExpenseForm';
 
 import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';

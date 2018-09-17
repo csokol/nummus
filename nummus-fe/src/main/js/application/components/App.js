@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
-import '../css/foundation.min.css';
-import '../css/App.css';
-import '../css/index.css';
+import '../../../css/foundation.min.css';
+import '../../../css/App.css';
+import '../../../css/index.css';
 import ExpenseForm from "./ExpenseForm";
 import ExpenseHistory from "./ExpenseHistory";
-
+import Expense from "../../domain/Expense";
 
 class App extends Component {
 
@@ -45,6 +45,8 @@ class App extends Component {
   }
 
   expenseAdded(event, state) {
+    let expense = Expense.createFromState(state);
+    localStorage.setItem("foo", JSON.stringify(expense));
     event.preventDefault();
     this.expenses.push({amount: state.amount, categoryId: state.category.id});
     this._expenseHistory.setState({

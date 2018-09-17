@@ -1,6 +1,6 @@
 // Link.react.test.js
 import React from 'react';
-import ExpenseHistory from '../../main/js/ExpenseHistory';
+import ExpenseHistory from '../../../../main/js/application/components/ExpenseHistory';
 
 import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
