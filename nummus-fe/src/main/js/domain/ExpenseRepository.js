@@ -13,7 +13,7 @@ class ExpenseRepository {
     return this.getExpenseKeys()
       .map(this.localStorage.getItem.bind(this.localStorage))
       .map(JSON.parse)
-      .map(obj => new Expense(obj.amountCents, obj.categoryId));
+      .map(obj => new Expense(obj.id, obj.amountCents, obj.categoryId));
   }
 
   getExpenseKeys() {
@@ -21,11 +21,19 @@ class ExpenseRepository {
     return JSON.parse(arrayJson);
   }
 
-  add(id, expense) {
-    let key = `${nummusPrefix}.expenses.${id}`;
+  add(expense) {
+    let key = `${nummusPrefix}.expenses.${expense.id}`;
     let expenseKeys = this.getExpenseKeys();
     this.localStorage.setItem(key, JSON.stringify(expense));
     expenseKeys.push(key);
+    this.localStorage.setItem(expenseKeysKey, JSON.stringify(expenseKeys));
+  }
+
+  delete(expense) {
+    let key = `${nummusPrefix}.expenses.${expense.id}`;
+    let expenseKeys = this.getExpenseKeys();
+    this.localStorage.removeItem(key);
+    expenseKeys = expenseKeys.filter(savedKey => savedKey !== key);
     this.localStorage.setItem(expenseKeysKey, JSON.stringify(expenseKeys));
   }
 

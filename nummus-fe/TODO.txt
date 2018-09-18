@@ -1,8 +1,9 @@
 - expense form validation (done)
 - local storage (done)
-- better number parsing
+- better number parsing (done)
 - delete expense
 - add date
-- aggregates (by month/categories?)
-- backend sync
 - make it responsive
+- aggregates (by month/categories?)
+- category creation
+- backend sync

@@ -1,13 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Expense from "../../domain/Expense";
+import ExpenseRepository from "../../domain/ExpenseRepository";
 import AmountFormatter from "../AmountFormatter";
 
 
 class ExpenseHistory extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      expenses: this.props.expenseRepository.list()
+    };
+  }
+
   static propTypes = {
-    expenses: PropTypes.arrayOf(PropTypes.instanceOf(Expense)),
+    expenseRepository: PropTypes.instanceOf(ExpenseRepository),
     categoriesById: PropTypes.object,
   };
 
@@ -17,16 +24,24 @@ class ExpenseHistory extends Component {
     return (<tr key={index}>
       <td>{formattedAmount}</td>
       <td>{category.name}</td>
+      <td><input type='button' value='Delete' className='delete-expense' onClick={this.deleteExpense(expense).bind(this)} /></td>
     </tr>)
   }
 
   render() {
-    const rows = this.props.expenses.map(this.makeItem.bind(this));
+    const rows = this.state.expenses.map(this.makeItem.bind(this));
     return (<table>
       <tbody>
         {rows}
       </tbody>
     </table>);
+  }
+
+  deleteExpense(expense) {
+    return () => {
+      this.props.expenseRepository.delete(expense);
+      this.setState({ expenses: this.props.expenseRepository.list()});
+    }
   }
 }
 

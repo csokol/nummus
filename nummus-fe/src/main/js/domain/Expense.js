@@ -1,16 +1,14 @@
 class Expense {
-  amountCents;
-  categoryId;
-
-  constructor(amountCents, categoryId) {
+  constructor(id, amountCents, categoryId) {
+    this.id = id;
     this.amountCents = amountCents;
     this.categoryId = categoryId;
   }
 
-  static createFromState(state) {
+  static createFromState(id, state) {
     let categoryId = state.category.id;
 
-    return new Expense(state.amount, categoryId);
+    return new Expense(id, state.amount, categoryId);
   }
 
   amountAsString() {

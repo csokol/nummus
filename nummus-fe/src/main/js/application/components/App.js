@@ -49,7 +49,7 @@ class App extends Component {
           <div className="large-6 medium-6 cell">
             <ExpenseHistory
                 categoriesById={this.categoriesById}
-                expenses={this.expenses}
+                expenseRepository={this.expenseRepository}
                 ref={(node) => this._expenseHistory = node}
             />
           </div>
@@ -62,12 +62,13 @@ class App extends Component {
   expenseAdded(event, state) {
     event.preventDefault();
 
-    let expense = Expense.createFromState(state);
-    this.expenseRepository.add(this.props.idGenerator.next(), expense);
+    const nextId = this.props.idGenerator.next();
+    let expense = Expense.createFromState(nextId, state);
+    this.expenseRepository.add(expense);
 
     this.expenses.push(expense);
     this._expenseHistory.setState({
-      expenses: this.expenses
+      expenses: this.expenseRepository.list()
     });
   }
 }
