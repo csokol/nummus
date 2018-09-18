@@ -1,7 +1,7 @@
 - expense form validation (done)
 - local storage (done)
 - better number parsing (done)
-- delete expense
+- delete expense (done)
 - add date
 - make it responsive
 - aggregates (by month/categories?)
