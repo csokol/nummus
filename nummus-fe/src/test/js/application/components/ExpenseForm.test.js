@@ -20,7 +20,7 @@ it('stores amount on state', () => {
   formControl.setAmount('100.50');
 
   expect(component.state).toEqual({
-    amount: '100.50',
+    amount: 10050,
   });
   ReactDOM.unmountComponentAtNode(div);
 });
@@ -59,7 +59,7 @@ it('runs callback on submit', () => {
 
   expect(finalState).toEqual({
     category: { name: 'fun money', id: 1 },
-    amount: '100.50',
+    amount: 10050,
   });
 
   ReactDOM.unmountComponentAtNode(div);
@@ -83,7 +83,7 @@ it('runs callback on click', () => {
 
   expect(finalState).toEqual({
     category: { name: 'fun money', id: 1 },
-    amount: '100.50',
+    amount: 10050,
   });
 
   ReactDOM.unmountComponentAtNode(div);
@@ -163,7 +163,25 @@ it('clears form after submit', () => {
 
   expect(component.state).toEqual({amount: null, category: null});
   expect(component._category.value).toEqual('0');
-  expect(component._amount.value).toEqual('');
+  expect(component._amount.value).toEqual('00,00');
+});
+
+it('formats amount', () => {
+  const div = document.createElement('div');
+  const component = ReactDOM.render(
+    <ExpenseForm
+      onValidationError={unit}
+      onSubmit={unit}
+      categories={categories}
+    />, div);
+  const formControl = new ExpenseFormControl(component);
+
+  formControl.pressInAmount('9'.charCodeAt(0));
+  formControl.pressInAmount('9'.charCodeAt(0));
+  formControl.pressInAmount('9'.charCodeAt(0));
+  formControl.pressInAmount(8);
+  formControl.pressInAmount(8);
+  expect(component._amount.value).toEqual('00,09');
 });
 
 
@@ -179,8 +197,13 @@ class ExpenseFormControl {
   }
 
   setAmount(amount) {
-    this.component._amount.value = amount;
-    ReactTestUtils.Simulate.change(this.component._amount);
+    for (let i = 0; i < amount.length; i++) {
+      this.pressInAmount(amount.charCodeAt(i));
+    }
+  }
+
+  pressInAmount(charCode) {
+    ReactTestUtils.Simulate.keyDown(this.component._amount, {key: String.fromCharCode(charCode), keyCode: charCode, which: charCode});
   }
 
   clickSubmit() {

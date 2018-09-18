@@ -5,9 +5,9 @@ import '../../../css/index.css';
 import ExpenseForm from "./ExpenseForm";
 import ExpenseHistory from "./ExpenseHistory";
 import Expense from "../../domain/Expense";
-
-const nummusPrefix = "nummus.io.";
-const expenseKeysKey = nummusPrefix + "expenseKeys";
+import ExpenseRepository from "../../domain/ExpenseRepository";
+import AutoIncrementIdGenerator from "../../domain/AutoIncrementIdGenerator";
+import PropTypes from 'prop-types';
 
 class App extends Component {
 
@@ -18,11 +18,20 @@ class App extends Component {
       { name: 'groceries', id: 2 },
     ];
     this.categoriesById = this.categories.reduce((map, v) => map.set(v.id, v), new Map());
-    this.expenses = this.getExpenseKeys()
-      .map(localStorage.getItem.bind(localStorage))
-      .map(JSON.parse)
-      .map(obj => new Expense(obj.amountCents, obj.categoryId));
+    this.expenseRepository = new ExpenseRepository(localStorage);
+    this.expenses = this.expenseRepository.list();
   }
+
+  static defaultProps = {
+    idGenerator: new AutoIncrementIdGenerator(),
+  };
+
+  static propTypes = {
+    idGenerator: PropTypes.shape({
+      next: PropTypes.func,
+    }),
+  };
+
 
   render() {
     return (
@@ -54,21 +63,12 @@ class App extends Component {
     event.preventDefault();
 
     let expense = Expense.createFromState(state);
-    let key = nummusPrefix + "expenses.foo";
-    let expenseKeys = this.getExpenseKeys();
-    localStorage.setItem(key, JSON.stringify(expense));
-    expenseKeys.push(key);
-    localStorage.setItem(expenseKeysKey, JSON.stringify(expenseKeys));
+    this.expenseRepository.add(this.props.idGenerator.next(), expense);
 
     this.expenses.push(expense);
     this._expenseHistory.setState({
       expenses: this.expenses
     });
-  }
-
-  getExpenseKeys() {
-    const arrayJson = localStorage.getItem(expenseKeysKey) || '[]';
-    return JSON.parse(arrayJson);
   }
 }
 

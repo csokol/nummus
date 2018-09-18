@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import AmountFormatter from "../AmountFormatter";
 
 
 class ExpenseForm extends Component {
@@ -8,6 +9,7 @@ class ExpenseForm extends Component {
     super(props);
     this.state = {};
     this._validationMessages = {};
+    this.amountFormatter = new AmountFormatter();
   }
 
   static defaultProps = {
@@ -22,10 +24,18 @@ class ExpenseForm extends Component {
     onValidationError: PropTypes.func,
   };
 
-  captureInput(event) {
-    let {name, value} = event.target;
-    this._validationMessages.amount.empty.className = 'form-error';
-    this.setState({[name]: value});
+  amountChanged(event) {
+    let {keyCode} = event;
+    const isBackspace = keyCode === 8;
+    const isDigit = keyCode >= '0'.charCodeAt(0) && keyCode <= '9'.charCodeAt(0);
+    if (isBackspace) {
+      this.amountFormatter.backspace();
+    } else if (isDigit) {
+      this.amountFormatter.keyDown(String.fromCharCode(keyCode));
+      this._validationMessages.amount.empty.className = 'form-error';
+    }
+    this._amount.value = this.amountFormatter.formatted();
+    this.setState({amount: this.amountFormatter.valueCents()});
   }
 
   categorySelected(event) {
@@ -55,8 +65,9 @@ class ExpenseForm extends Component {
         return;
       }
       this.setState({amount: null, category: null});
+      this.amountFormatter.clear();
+      this._amount.value = this.amountFormatter.formatted();
       this._category.value = null;
-      this._amount.value = null;
       onSubmit(event, state);
     }
   }
@@ -73,11 +84,12 @@ class ExpenseForm extends Component {
             Amount
               <div className="input-group">
                 <input
-                  type='number'
+                  type='text'
                   className="input-group-field"
                   name='amount'
-                  onChange={this.captureInput.bind(this)}
+                  onKeyDown={this.amountChanged.bind(this)}
                   ref={(node) => this._amount = node}
+                  defaultValue={this.amountFormatter.formatted()}
                 />
               </div>
               <span ref={node => this._validationMessages.amount = {empty: node}} className='form-error'>

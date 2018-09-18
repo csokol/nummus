@@ -1,5 +1,6 @@
 - expense form validation (done)
 - local storage (done)
+- better number parsing
 - delete expense
 - add date
 - aggregates (by month/categories?)

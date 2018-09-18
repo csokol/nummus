@@ -25,6 +25,8 @@ test('shows expenses', () => {
 
   let items = ReactTestUtils.scryRenderedDOMComponentsWithTag(component, 'tr');
   expect(items).toHaveLength(2);
-  ReactDOM.unmountComponentAtNode(div);
+  const cell = ReactTestUtils.scryRenderedDOMComponentsWithTag(component, 'td')[0];
+  const domNode = ReactDOM.findDOMNode(cell);
+  expect(domNode.innerHTML).toEqual('10,00');
 });
 

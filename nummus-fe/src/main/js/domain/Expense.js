@@ -8,10 +8,9 @@ class Expense {
   }
 
   static createFromState(state) {
-    let amountInt = parseInt(state.amount.replace(/\./g, ''), 10);
     let categoryId = state.category.id;
 
-    return new Expense(amountInt, categoryId);
+    return new Expense(state.amount, categoryId);
   }
 
   amountAsString() {

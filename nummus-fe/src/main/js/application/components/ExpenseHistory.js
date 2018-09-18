@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Expense from "../../domain/Expense";
+import AmountFormatter from "../AmountFormatter";
 
 
 class ExpenseHistory extends Component {
-
-  static defaultProps = {
-  };
 
   static propTypes = {
     expenses: PropTypes.arrayOf(PropTypes.instanceOf(Expense)),
@@ -15,8 +13,9 @@ class ExpenseHistory extends Component {
 
   makeItem(expense, index) {
     let category = this.props.categoriesById.get(expense.categoryId);
+    const formattedAmount = AmountFormatter.fromCents(expense.amountCents).formatted();
     return (<tr key={index}>
-      <td>{expense.amountAsString()}</td>
+      <td>{formattedAmount}</td>
       <td>{category.name}</td>
     </tr>)
   }
