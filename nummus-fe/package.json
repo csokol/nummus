@@ -1,6 +1,6 @@
 {
   "name": "nummus-fe",
-  "homepage" : "https://csokol.github.io/nummus",
+  "homepage" : "https://csokol.github.io/nummus/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

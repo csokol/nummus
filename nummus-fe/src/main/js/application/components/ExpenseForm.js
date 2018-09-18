@@ -25,10 +25,10 @@ class ExpenseForm extends Component {
   };
 
   amountChanged(event) {
-    debugger;
-    let {keyCode} = event;
+    let {key} = event;
+    const keyCode = key.charCodeAt(0);
     event.preventDefault();
-    const isBackspace = keyCode === 8;
+    const isBackspace = key === 'Backspace';
     const isDigit = keyCode >= '0'.charCodeAt(0) && keyCode <= '9'.charCodeAt(0);
     if (isBackspace) {
       this.amountFormatter.backspace();
@@ -86,8 +86,8 @@ class ExpenseForm extends Component {
             Amount
               <div className="input-group">
                 <input
-                  type='text'
-                  className="input-group-field"
+                  type='number'
+                  className="input-group-field amount-input"
                   name='amount'
                   onKeyDown={this.amountChanged.bind(this)}
                   ref={(node) => this._amount = node}

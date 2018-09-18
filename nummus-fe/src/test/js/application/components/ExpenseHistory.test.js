@@ -36,7 +36,7 @@ test('shows expenses', () => {
   expect(items).toHaveLength(2);
   const cell = ReactTestUtils.scryRenderedDOMComponentsWithTag(component, 'td')[0];
   const domNode = ReactDOM.findDOMNode(cell);
-  expect(domNode.innerHTML).toEqual('10,00');
+  expect(domNode.innerHTML).toEqual('10.00');
   localStorageMock.clear();
 });
 

@@ -7,3 +7,8 @@ body {
 .is-visible {
   display: block !important;
 }
+
+.input-group-field.amount-input {
+  color: transparent;
+  text-shadow: 0 0 0 #000;
+}

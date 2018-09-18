@@ -10,7 +10,7 @@ class AmountFormatter {
     var centsPart = cents.substring(cents.length - 2, cents.length);
     var unitsPart = cents.substring(0, cents.length - 2);
 
-    return `${unitsPart},${centsPart}`;
+    return `${unitsPart}.${centsPart}`;
   }
 
   formattedCents() {

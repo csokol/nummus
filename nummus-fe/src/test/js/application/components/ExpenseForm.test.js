@@ -163,7 +163,7 @@ it('clears form after submit', () => {
 
   expect(component.state).toEqual({amount: null, category: null});
   expect(component._category.value).toEqual('0');
-  expect(component._amount.value).toEqual('00,00');
+  expect(component._amount.value).toEqual('00.00');
 });
 
 it('formats amount', () => {
@@ -181,7 +181,7 @@ it('formats amount', () => {
   formControl.pressInAmount('9'.charCodeAt(0));
   formControl.pressInAmount(8);
   formControl.pressInAmount(8);
-  expect(component._amount.value).toEqual('00,09');
+  expect(component._amount.value).toEqual('00.09');
 });
 
 
@@ -203,7 +203,8 @@ class ExpenseFormControl {
   }
 
   pressInAmount(charCode) {
-    ReactTestUtils.Simulate.keyDown(this.component._amount, {key: String.fromCharCode(charCode), keyCode: charCode, which: charCode});
+    const key = charCode === 8 ? 'Backspace' : String.fromCharCode(charCode);
+    ReactTestUtils.Simulate.keyDown(this.component._amount, {key: key, keyCode: charCode, which: charCode});
   }
 
   clickSubmit() {
