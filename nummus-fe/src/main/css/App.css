@@ -47,3 +47,7 @@
   height: 2em;
   font-size: 2em;
 }
+
+.amount-input:after {
+  content: '€';
+}

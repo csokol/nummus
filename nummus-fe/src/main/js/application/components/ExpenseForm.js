@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import AmountFormatter from "../AmountFormatter";
 
-
 class ExpenseForm extends Component {
 
   constructor(props) {
@@ -36,6 +35,7 @@ class ExpenseForm extends Component {
       this.amountFormatter.keyDown(String.fromCharCode(keyCode));
       this._validationMessages.amount.empty.className = 'form-error';
     }
+    debugger;
     this._amount.value = this.amountFormatter.formatted();
     this.setState({amount: this.amountFormatter.valueCents()});
   }
@@ -85,6 +85,7 @@ class ExpenseForm extends Component {
             <div>
             Amount
               <div className="input-group">
+                <span className="input-group-label">€</span>
                 <input
                   type='number'
                   className="input-group-field amount-input"

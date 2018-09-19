@@ -1,3 +1,5 @@
+
+const decimalSeparator = (1.1).toLocaleString().substring(1, 2);
 class AmountFormatter {
 
   constructor() {
@@ -7,10 +9,9 @@ class AmountFormatter {
   formatted() {
     const cents = this.formattedCents();
 
-    var centsPart = cents.substring(cents.length - 2, cents.length);
-    var unitsPart = cents.substring(0, cents.length - 2);
-
-    return `${unitsPart}.${centsPart}`;
+    let centsPart = cents.substring(cents.length - 2, cents.length);
+    let unitsPart = cents.substring(0, cents.length - 2);
+    return `${unitsPart}${decimalSeparator}${centsPart}`;
   }
 
   formattedCents() {

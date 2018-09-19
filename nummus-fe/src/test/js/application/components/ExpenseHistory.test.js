@@ -39,7 +39,7 @@ test('shows expenses', () => {
   expect(items).toHaveLength(2);
   const cell = ReactTestUtils.scryRenderedDOMComponentsWithTag(component, 'td')[1];
   const domNode = ReactDOM.findDOMNode(cell);
-  expect(domNode.innerHTML).toEqual('10.00');
+  expect(domNode.innerHTML).toEqual('€10.00');
   localStorageMock.clear();
 });
 
@@ -54,7 +54,7 @@ test('shows expense with no date', () => {
   expect(items).toHaveLength(1);
   const cell = ReactTestUtils.scryRenderedDOMComponentsWithTag(component, 'td')[1];
   const domNode = ReactDOM.findDOMNode(cell);
-  expect(domNode.innerHTML).toEqual('20.00');
+  expect(domNode.innerHTML).toEqual('€20.00');
   localStorageMock.clear();
 });
 

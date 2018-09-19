@@ -23,7 +23,7 @@ class ExpenseHistory extends Component {
     const formattedAmount = AmountFormatter.fromCents(expense.amountCents).formatted();
     return (<tr key={index}>
       <td>{expense.formattedDate()}</td>
-      <td>{formattedAmount}</td>
+      <td>€{formattedAmount}</td>
       <td>{category.name}</td>
       <td>
         <input
