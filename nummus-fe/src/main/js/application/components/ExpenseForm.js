@@ -35,7 +35,6 @@ class ExpenseForm extends Component {
       this.amountFormatter.keyDown(String.fromCharCode(keyCode));
       this._validationMessages.amount.empty.className = 'form-error';
     }
-    debugger;
     this._amount.value = this.amountFormatter.formatted();
     this.setState({amount: this.amountFormatter.valueCents()});
   }

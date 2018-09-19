@@ -12,10 +12,18 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    this.categories = [
-      { name: 'fun money', id: 1 },
-      { name: 'groceries', id: 2 },
-    ];
+    const categories = [
+      'fun',
+      'groceries',
+      'travel',
+      'dining out',
+      'rent',
+      'home expense',
+      'sports',
+      'transportation',
+    ].map((name, index) => { return { name: name, id: index } });
+
+    this.categories = categories.sort((a, b) => a.name.localeCompare(b.name));
     this.categoriesById = this.categories.reduce((map, v) => map.set(v.id, v), new Map());
     this.expenseRepository = new ExpenseRepository(localStorage);
     this.expenses = this.expenseRepository.list();
