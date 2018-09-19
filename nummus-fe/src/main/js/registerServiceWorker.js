@@ -8,6 +8,8 @@
 // To learn more about the benefits of this model, read https://goo.gl/KwvDNy.
 // This link also includes instructions on opting out of this behavior.
 
+let deferredPrompt;
+
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||
     // [::1] is the IPv6 localhost address.
@@ -19,7 +21,16 @@ const isLocalhost = Boolean(
 );
 
 export default function register() {
-  if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+  const shouldRegister = process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator;
+  // const shouldRegister = true;
+  if (shouldRegister) {
+    window.addEventListener("beforeinstallprompt", function(e) {
+      // log the platforms provided as options in an install prompt
+      console.log(e.platforms); // e.g., ["web", "android", "windows"]
+      e.userChoice.then(function(outcome) {
+        console.log(outcome); // either "accepted" or "dismissed"
+      }, () => undefined);
+    });
     // The URL constructor is available in all browsers that support SW.
     const publicUrl = new URL(process.env.PUBLIC_URL, window.location);
     if (publicUrl.origin !== window.location.origin) {
