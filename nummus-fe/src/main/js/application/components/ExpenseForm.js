@@ -94,9 +94,11 @@ class ExpenseForm extends Component {
                   defaultValue={this.amountFormatter.formatted()}
                 />
               </div>
-              <span ref={node => this._validationMessages.amount = {empty: node}} className='form-error'>
-                Amount cannot be empty
-              </span>
+              <div className='form-error-container'>
+                <span ref={node => this._validationMessages.amount = {empty: node}} className='form-error'>
+                  Amount cannot be empty
+                </span>
+              </div>
             </div>
           </label>
 
@@ -112,15 +114,17 @@ class ExpenseForm extends Component {
                 <option value={0} />
                 {categories}
               </select>
-              <span ref={node => this._validationMessages.category = {empty: node}} className='form-error'>
-                  Category cannot be empty
-              </span>
+              <div className='form-error-container'>
+                <span ref={node => this._validationMessages.category = {empty: node}} className='form-error'>
+                    Category cannot be empty
+                </span>
+              </div>
             </div>
           </label>
 
           <input
             type='submit'
-            className='expense-form-submit'
+            className='expense-form-submit success button expanded large'
             value='Save'
             onSubmit={this.formSubmitted().bind(this)}
             onClick={this.formSubmitted().bind(this)}

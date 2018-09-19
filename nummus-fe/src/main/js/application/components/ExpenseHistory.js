@@ -22,9 +22,17 @@ class ExpenseHistory extends Component {
     let category = this.props.categoriesById.get(expense.categoryId);
     const formattedAmount = AmountFormatter.fromCents(expense.amountCents).formatted();
     return (<tr key={index}>
+      <td>{expense.formattedDate()}</td>
       <td>{formattedAmount}</td>
       <td>{category.name}</td>
-      <td><input type='button' value='Delete' className='delete-expense' onClick={this.deleteExpense(expense).bind(this)} /></td>
+      <td>
+        <input
+          type='button'
+          value='Delete'
+          className='delete-expense alert button expanded'
+          onClick={this.deleteExpense(expense).bind(this)}
+        />
+      </td>
     </tr>)
   }
 
