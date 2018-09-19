@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from '../../../../main/js/application/components/App';
+import ExpensesDash from '../../../../main/js/application/components/ExpensesDash';
 import Expense from '../../../../main/js/domain/Expense';
 import AutoIncrementIdGenerator from '../../../../main/js/domain/AutoIncrementIdGenerator';
 import ExpenseForm from '../../../../main/js/application/components/ExpenseForm';
@@ -29,7 +29,7 @@ global.localStorage = localStorageMock;
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<App />, div);
+  ReactDOM.render(<ExpensesDash />, div);
 });
 
 it('adds expense into history', () => {
@@ -90,5 +90,5 @@ it('puts localstorage data into history', () => {
 });
 
 function makeApp(div) {
-  return ReactDOM.render(<App idGenerator={new AutoIncrementIdGenerator()}/>, div);
+  return ReactDOM.render(<ExpensesDash idGenerator={new AutoIncrementIdGenerator()}/>, div);
 }

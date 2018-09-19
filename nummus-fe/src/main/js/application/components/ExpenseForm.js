@@ -125,7 +125,7 @@ class ExpenseForm extends Component {
           <input
             type='submit'
             className='expense-form-submit success button expanded large'
-            value='Save'
+            value='Add expense'
             onSubmit={this.formSubmitted().bind(this)}
             onClick={this.formSubmitted().bind(this)}
             ref={(node) => this._submit = node}

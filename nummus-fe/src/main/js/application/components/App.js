@@ -1,79 +1,32 @@
-import React, {Component} from 'react';
-import '../../../css/App.css';
-import '../../../css/index.css';
+import React, { Component } from 'react';
+import ExpensesDash from "./ExpensesDash";
+import BudgetDash from "./BudgetDash";
+import {BrowserRouter as Router, Route, Link} from 'react-router-dom'
 import ExpenseForm from "./ExpenseForm";
-import ExpenseHistory from "./ExpenseHistory";
-import Expense from "../../domain/Expense";
-import ExpenseRepository from "../../domain/ExpenseRepository";
-import AutoIncrementIdGenerator from "../../domain/AutoIncrementIdGenerator";
-import PropTypes from 'prop-types';
+import UUIDGenerator from "../../domain/UUIDGenerator";
 
 class App extends Component {
-
-  constructor(props) {
-    super(props);
-    const categories = [
-      'fun',
-      'groceries',
-      'travel',
-      'dining out',
-      'rent',
-      'home expense',
-      'sports',
-      'transportation',
-    ].map((name, index) => { return { name: name, id: index } });
-
-    this.categories = categories.sort((a, b) => a.name.localeCompare(b.name));
-    this.categoriesById = this.categories.reduce((map, v) => map.set(v.id, v), new Map());
-    this.expenseRepository = new ExpenseRepository(localStorage);
-    this.expenses = this.expenseRepository.list();
-  }
-
-  static defaultProps = {
-    idGenerator: new AutoIncrementIdGenerator(),
-  };
-
-  static propTypes = {
-    idGenerator: PropTypes.shape({
-      next: PropTypes.func,
-    }),
-  };
-
-
   render() {
     return (
-      <div className="grid-container main-container">
-        <div className="grid-x grid-padding-x">
-          <div className="large-6 medium-6 cell">
-            <ExpenseForm
-                categories={this.categories}
-                onSubmit={this.expenseAdded.bind(this)}
-            />
+      <Router>
+        <div>
+          <div className="top-bar" id="responsive-menu">
+            <div className="top-bar-left">
+              <ul className="dropdown menu" data-dropdown-menu>
+                <li className="menu-text"><Link to="/">Nummus budgeting</Link></li>
+                <li>
+                  <Link to="/budget">Budget</Link>
+                </li>
+              </ul>
+            </div>
           </div>
-          <div className="large-6 medium-6 cell">
-            <ExpenseHistory
-                categoriesById={this.categoriesById}
-                expenseRepository={this.expenseRepository}
-                ref={(node) => this._expenseHistory = node}
-            />
+          <div className="grid-container main-container">
+            <Route exact path="/" component={() => <ExpensesDash idGenerator={new UUIDGenerator()} />}/>
+            <Route path="/budget" component={BudgetDash}/>
           </div>
         </div>
-      </div>
-
+      </Router>
     );
-  }
-
-  expenseAdded(event, state) {
-    event.preventDefault();
-
-    const nextId = this.props.idGenerator.next();
-    let expense = Expense.createFromState(nextId, state);
-    this.expenseRepository.add(expense);
-
-    this.expenses.push(expense);
-    this._expenseHistory.setState({
-      expenses: this.expenseRepository.list()
-    });
   }
 }
 
