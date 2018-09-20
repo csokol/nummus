@@ -1,3 +1,10 @@
+import moment from 'moment';
+import MonthlyBudget from "./MonthlyBudget";
+import CategoryBudget from "./CategoryBudget";
+
+const nummusPrefix = "nummus.io";
+const monthlyBudgetsKey = nummusPrefix + ".expenseKeys";
+
 class BudgetRepository {
   _categoryRepository;
 
@@ -8,6 +15,29 @@ class BudgetRepository {
 
   list() {
     return this.categories;
+  }
+
+  currentMonthlyBudget() {
+    const yearMonth = moment().format("YYYY_MM");
+    const key = `${nummusPrefix}.monthlyBudgets.${yearMonth}`;
+    const found = this._localStorage.getItem(key);
+
+    if (found) {
+      return Object.assign(new MonthlyBudget, JSON.parse(found));
+    }
+
+    const categoryBudgets = this._categoryRepository.list()
+      .map(CategoryBudget.fromCategory(yearMonth));
+
+    const newBudget = new MonthlyBudget(key, categoryBudgets, yearMonth);
+
+    this._localStorage.setItem(key, JSON.stringify(newBudget));
+    return newBudget;
+  }
+
+  update(monthlyBudget) {
+    const key = `${nummusPrefix}.monthlyBudgets.${monthlyBudget.yearMonth}`;
+    this._localStorage.setItem(key, JSON.stringify(monthlyBudget));
   }
 }
 
