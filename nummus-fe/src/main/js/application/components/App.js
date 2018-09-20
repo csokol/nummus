@@ -33,18 +33,18 @@ class App extends Component {
           <div className="top-bar" id="responsive-menu">
             <div className="top-bar-left">
               <ul className="dropdown menu" data-dropdown-menu>
-                <li className="menu-text"><Link to="/">Nummus budgeting</Link></li>
+                <li className="menu-text"><Link to="/nummus">Nummus budgeting</Link></li>
                 <li>
-                  <Link to="/budget">Budget</Link>
+                  <Link to="/nummus/budget">Budget</Link>
                 </li>
                 <li>
-                  <Link to="/">Expense</Link>
+                  <Link to="/nummus">Expense</Link>
                 </li>
               </ul>
             </div>
           </div>
           <div className="grid-container main-container">
-            <Route exact path="/" component={this.makeExpensesDash.bind(this)}/>
+            <Route exact path="/nummus" component={this.makeExpensesDash.bind(this)}/>
             <Route path="/budget" component={this.makeBudgetDash.bind(this)}/>
           </div>
         </div>
