@@ -1,7 +1,9 @@
 class BudgetRepository {
+  _categoryRepository;
 
-  constructor(localStorage) {
+  constructor(localStorage, categoryRepository) {
     this._localStorage = localStorage;
+    this._categoryRepository = categoryRepository;
   }
 
   list() {

@@ -1,3 +1,5 @@
+import Category from "./Category";
+
 class CategoryRepository {
 
   constructor() {
@@ -12,7 +14,7 @@ class CategoryRepository {
       'transportation',
       'lunch @ work',
     ].map((name, index) => {
-      return {name: name, id: index}
+      return new Category(index, name)
     });
 
     this.categories = categories.sort((a, b) => a.name.localeCompare(b.name));
