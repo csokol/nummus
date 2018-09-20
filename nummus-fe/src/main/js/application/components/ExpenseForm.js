@@ -26,6 +26,9 @@ class ExpenseForm extends Component {
   amountChanged(event) {
     let {key} = event;
     const keyCode = key.charCodeAt(0);
+    if (key === 'Tab') {
+      return;
+    }
     event.preventDefault();
     const isBackspace = key === 'Backspace';
     const isDigit = keyCode >= '0'.charCodeAt(0) && keyCode <= '9'.charCodeAt(0);

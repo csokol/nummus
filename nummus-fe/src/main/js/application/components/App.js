@@ -4,8 +4,14 @@ import BudgetDash from "./BudgetDash";
 import {BrowserRouter as Router, Route, Link} from 'react-router-dom'
 import ExpenseForm from "./ExpenseForm";
 import UUIDGenerator from "../../domain/UUIDGenerator";
+import CategoryRepository from "../../domain/CategoryRepository";
 
 class App extends Component {
+
+  makeExpensesDash() {
+    return <ExpensesDash idGenerator={new UUIDGenerator()} categoryRepository={new CategoryRepository()} />
+  }
+
   render() {
     return (
       <Router>
@@ -21,7 +27,7 @@ class App extends Component {
             </div>
           </div>
           <div className="grid-container main-container">
-            <Route exact path="/" component={() => <ExpensesDash idGenerator={new UUIDGenerator()} />}/>
+            <Route exact path="/" component={this.makeExpensesDash}/>
             <Route path="/budget" component={BudgetDash}/>
           </div>
         </div>

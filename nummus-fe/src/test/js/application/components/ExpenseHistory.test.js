@@ -6,25 +6,7 @@ import Expense from '../../../../main/js/domain/Expense';
 import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 import ExpenseRepository from "../../../../main/js/domain/ExpenseRepository";
-
-class LocalStorageMock {
-  store = new Map();
-
-  getItem(key) {
-    return this.store.get(key);
-  }
-  setItem(k, v){
-    this.store.set(k, v);
-  }
-
-  clear() {
-    this.store = new Map();
-  }
-
-  removeItem(key) {
-    this.store.delete(key);
-  }
-}
+import LocalStorageMock from "../LocalStorageMock";
 
 const localStorageMock = new LocalStorageMock();
 global.localStorage = localStorageMock;

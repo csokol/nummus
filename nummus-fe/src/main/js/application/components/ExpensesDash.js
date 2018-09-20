@@ -5,6 +5,7 @@ import ExpenseForm from "./ExpenseForm";
 import ExpenseHistory from "./ExpenseHistory";
 import Expense from "../../domain/Expense";
 import ExpenseRepository from "../../domain/ExpenseRepository";
+import CategoryRepository from "../../domain/CategoryRepository";
 import AutoIncrementIdGenerator from "../../domain/AutoIncrementIdGenerator";
 import PropTypes from 'prop-types';
 
@@ -12,19 +13,7 @@ class ExpensesDash extends Component {
 
   constructor(props) {
     super(props);
-    const categories = [
-      'fun',
-      'groceries',
-      'travel',
-      'dining out',
-      'rent',
-      'home expense',
-      'sports',
-      'transportation',
-      'lunch @ work',
-    ].map((name, index) => { return { name: name, id: index } });
-
-    this.categories = categories.sort((a, b) => a.name.localeCompare(b.name));
+    this.categories = this.props.categoryRepository.list();
     this.categoriesById = this.categories.reduce((map, v) => map.set(v.id, v), new Map());
     this.expenseRepository = new ExpenseRepository(localStorage);
     this.expenses = this.expenseRepository.list();
@@ -38,6 +27,7 @@ class ExpensesDash extends Component {
     idGenerator: PropTypes.shape({
       next: PropTypes.func,
     }),
+    categoryRepository: PropTypes.instanceOf(CategoryRepository),
   };
 
 
