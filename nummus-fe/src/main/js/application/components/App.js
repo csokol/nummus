@@ -5,11 +5,25 @@ import {BrowserRouter as Router, Route, Link} from 'react-router-dom'
 import ExpenseForm from "./ExpenseForm";
 import UUIDGenerator from "../../domain/UUIDGenerator";
 import CategoryRepository from "../../domain/CategoryRepository";
+import BudgetRepository from "../../domain/BudgetRepository";
 
 class App extends Component {
 
+  constructor(props) {
+    super(props);
+    this.categoryRepository = new CategoryRepository();
+    this.budgetRepository = new BudgetRepository(localStorage, this.categoryRepository);
+  }
+
   makeExpensesDash() {
-    return <ExpensesDash idGenerator={new UUIDGenerator()} categoryRepository={new CategoryRepository()} />
+    return <ExpensesDash idGenerator={new UUIDGenerator()} categoryRepository={this.categoryRepository} />
+  }
+
+  makeBudgetDash() {
+    return <BudgetDash
+      categoryRepository={this.categoryRepository}
+      budgetRepository={this.budgetRepository}
+    />
   }
 
   render() {
@@ -23,12 +37,15 @@ class App extends Component {
                 <li>
                   <Link to="/budget">Budget</Link>
                 </li>
+                <li>
+                  <Link to="/">Expense</Link>
+                </li>
               </ul>
             </div>
           </div>
           <div className="grid-container main-container">
-            <Route exact path="/" component={this.makeExpensesDash}/>
-            <Route path="/budget" component={BudgetDash}/>
+            <Route exact path="/" component={this.makeExpensesDash.bind(this)}/>
+            <Route path="/budget" component={this.makeBudgetDash.bind(this)}/>
           </div>
         </div>
       </Router>

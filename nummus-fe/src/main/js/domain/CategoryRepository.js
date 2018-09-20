@@ -23,6 +23,10 @@ class CategoryRepository {
   list() {
     return this.categories;
   }
+
+  categoriesById() {
+    return this.list().reduce((map, v) => map.set(v.id, v), new Map())
+  }
 }
 
 export default CategoryRepository;

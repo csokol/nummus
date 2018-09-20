@@ -23,7 +23,9 @@ class BudgetRepository {
     const found = this._localStorage.getItem(key);
 
     if (found) {
-      return Object.assign(new MonthlyBudget, JSON.parse(found));
+      const budget = Object.assign(new MonthlyBudget, JSON.parse(found));
+      budget.categoryBudgets = budget.categoryBudgets.map(obj => Object.assign(new CategoryBudget, obj))
+      return budget;
     }
 
     const categoryBudgets = this._categoryRepository.list()
@@ -36,7 +38,7 @@ class BudgetRepository {
   }
 
   update(monthlyBudget) {
-    const key = `${nummusPrefix}.monthlyBudgets.${monthlyBudget.yearMonth}`;
+    const key = `${nummusPrefix}.monthlyBudgets.${monthlyBudget.month}`;
     this._localStorage.setItem(key, JSON.stringify(monthlyBudget));
   }
 }

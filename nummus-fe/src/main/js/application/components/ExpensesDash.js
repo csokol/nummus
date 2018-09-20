@@ -14,7 +14,7 @@ class ExpensesDash extends Component {
   constructor(props) {
     super(props);
     this.categories = this.props.categoryRepository.list();
-    this.categoriesById = this.categories.reduce((map, v) => map.set(v.id, v), new Map());
+    this.categoriesById = this.props.categoryRepository.categoriesById();
     this.expenseRepository = new ExpenseRepository(localStorage);
     this.expenses = this.expenseRepository.list();
   }

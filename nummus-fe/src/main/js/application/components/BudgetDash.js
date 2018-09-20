@@ -1,24 +1,25 @@
-import React, { Component } from 'react';
-import ExpenseForm from "./ExpenseForm";
-import ExpenseHistory from "./ExpenseHistory";
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import CategoryRepository from "../../domain/CategoryRepository";
+import BudgetRepository from "../../domain/BudgetRepository";
 
 class BudgetDash extends Component {
   static propTypes = {
+    budgetRepository: PropTypes.instanceOf(BudgetRepository),
     categoryRepository: PropTypes.instanceOf(CategoryRepository),
   };
 
   constructor(props) {
     super(props);
+    this.categoriesById = this.props.categoryRepository.categoriesById();
   }
 
   render() {
-    const categories = this.props.categoryRepository.list();
-    const tbody = categories.map(category =>
-      <tr key={category.id}>
-        <td>{category.name}</td>
-        <td>€00.00</td>
+    const budget = this.props.budgetRepository.currentMonthlyBudget();
+    const tbody = budget.categoryBudgets.map(categoryBudget =>
+      <tr key={categoryBudget.id}>
+        <td>{this.categoriesById.get(categoryBudget.categoryId).name}</td>
+        <td>€{categoryBudget.formatedBudgetedAmount()}</td>
         <td>€00.00</td>
       </tr>
     );
