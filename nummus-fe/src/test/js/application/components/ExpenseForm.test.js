@@ -12,19 +12,6 @@ const categories = [
 
 const unit = (x) => x;
 
-it('stores amount on state', () => {
-  const div = document.createElement('div');
-  const component = ReactDOM.render(<ExpenseForm/>, div);
-
-  const formControl = new ExpenseFormControl(component);
-  formControl.setAmount('100.50');
-
-  expect(component.state).toEqual({
-    amount: 10050,
-  });
-  ReactDOM.unmountComponentAtNode(div);
-});
-
 it('stores category on state', () => {
   const div = document.createElement('div');
   const component = ReactDOM.render(
@@ -166,26 +153,6 @@ it('clears form after submit', () => {
   expect(component._amount.value).toEqual('00.00');
 });
 
-it('formats amount', () => {
-  const div = document.createElement('div');
-  const component = ReactDOM.render(
-    <ExpenseForm
-      onValidationError={unit}
-      onSubmit={unit}
-      categories={categories}
-    />, div);
-  const formControl = new ExpenseFormControl(component);
-
-  formControl.pressInAmount('9'.charCodeAt(0));
-  formControl.pressInAmount('9'.charCodeAt(0));
-  formControl.pressInAmount('9'.charCodeAt(0));
-  formControl.pressInAmount(8);
-  formControl.pressInAmount(8);
-  expect(component._amount.value).toEqual('00.09');
-});
-
-
-
 class ExpenseFormControl {
   constructor(component) {
     this.component = component;
@@ -204,7 +171,7 @@ class ExpenseFormControl {
 
   pressInAmount(charCode) {
     const key = charCode === 8 ? 'Backspace' : String.fromCharCode(charCode);
-    ReactTestUtils.Simulate.keyDown(this.component._amount, {key: key, keyCode: charCode, which: charCode});
+    ReactTestUtils.Simulate.keyDown(this.component._amount._amount, {key: key, keyCode: charCode, which: charCode});
   }
 
   clickSubmit() {

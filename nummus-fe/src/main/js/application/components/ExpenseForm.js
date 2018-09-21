@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import AmountFormatter from "../AmountFormatter";
+import AmountInput from "./AmountInput";
 
 class ExpenseForm extends Component {
 
@@ -42,6 +43,10 @@ class ExpenseForm extends Component {
     this.setState({amount: this.amountFormatter.valueCents()});
   }
 
+  clearErrors() {
+    this._validationMessages.amount.empty.className = 'form-error';
+  }
+
   categorySelected(event) {
     let {value} = event.target;
     let categorySelected = this.props.categories.filter(c => c.id === parseInt(value, 10))[0];
@@ -53,7 +58,8 @@ class ExpenseForm extends Component {
     let onSubmit = this.props.onSubmit;
     return (event) => {
       let state = this.state;
-      const {amount, category} = state;
+      const {category} = state;
+      const amount = this._amount.state.value;
       const validationErrors = [];
       if (!category) {
         validationErrors.push({where: "category", type: "empty_field"});
@@ -72,7 +78,7 @@ class ExpenseForm extends Component {
       this.amountFormatter.clear();
       this._amount.value = this.amountFormatter.formatted();
       this._category.value = null;
-      onSubmit(event, state);
+      onSubmit(event, { ...state, amount: amount });
     }
   }
 
@@ -88,14 +94,18 @@ class ExpenseForm extends Component {
             Amount
               <div className="input-group">
                 <span className="input-group-label">€</span>
-                <input
-                  type='number'
-                  className="input-group-field amount-input"
-                  name='amount'
-                  onKeyDown={this.amountChanged.bind(this)}
+                <AmountInput
                   ref={(node) => this._amount = node}
-                  defaultValue={this.amountFormatter.formatted()}
+                  onDigit={this.clearErrors.bind(this)}
                 />
+                {/*<input*/}
+                  {/*type='number'*/}
+                  {/*className="input-group-field amount-input"*/}
+                  {/*name='amount'*/}
+                  {/*onKeyDown={this.amountChanged.bind(this)}*/}
+                  {/*ref={(node) => this._amount = node}*/}
+                  {/*defaultValue={this.amountFormatter.formatted()}*/}
+                {/*/>*/}
               </div>
               <div className='form-error-container'>
                 <span ref={node => this._validationMessages.amount = {empty: node}} className='form-error'>
