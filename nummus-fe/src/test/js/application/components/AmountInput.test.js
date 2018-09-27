@@ -60,4 +60,10 @@ class AmountInputControl {
     const key = charCode === 8 ? 'Backspace' : String.fromCharCode(charCode);
     ReactTestUtils.Simulate.keyDown(this.component._amount, {key: key, keyCode: charCode, which: charCode});
   }
+
+  backspace(charCode) {
+    this.pressInAmount(8);
+  }
 }
+
+export { AmountInputControl }

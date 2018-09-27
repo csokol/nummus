@@ -12,6 +12,10 @@ class CategoryBudget {
       new CategoryBudget(`${category.id}_${yearMonth}`, 0, category.id);
   }
 
+  setBudget(budgeted) {
+    this.budgeted = budgeted;
+  }
+
   formatedBudgetedAmount() {
     let cents = this.budgeted % 100;
     let units = Math.floor(this.budgeted / 100);

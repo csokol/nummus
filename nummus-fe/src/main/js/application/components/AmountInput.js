@@ -6,17 +6,23 @@ class AmountInput extends Component {
 
   constructor(props) {
     super(props);
-    this.amountFormatter = new AmountFormatter();
+    this.amountFormatter = AmountFormatter.fromCents(this.props.initialValue);
     this._amount = null;
-    this.state = {};
+    this.state = {value: this.props.initialValue};
   }
 
   static defaultProps = {
-    onDigit: (key) => console.warn("Unhadled onDigit"),
+    onDigit: () => console.warn("Unhadled onDigit"),
+    onAmountChanged: () => undefined,
+    className: 'input-group-field amount-input',
+    initialValue: 0,
   };
 
   static propTypes = {
     onDigit: PropTypes.func,
+    onAmountChanged: PropTypes.func,
+    initialValue: PropTypes.number,
+    inputClass: PropTypes.string,
   };
 
   amountChanged(event) {
@@ -33,9 +39,9 @@ class AmountInput extends Component {
     } else if (isDigit) {
       this.amountFormatter.keyDown(String.fromCharCode(keyCode));
       this.props.onDigit(key);
-      // this._validationMessages.amount.empty.className = 'form-error';
     }
     this._amount.value = this.amountFormatter.formatted();
+    this.props.onAmountChanged(this.amountFormatter.valueCents());
     this.setState({value: this.amountFormatter.valueCents()});
   }
 
@@ -43,7 +49,7 @@ class AmountInput extends Component {
     return (
       <input
         type='number'
-        className="input-group-field amount-input"
+        className={this.props.inputClass}
         name='amount'
         onKeyDown={this.amountChanged.bind(this)}
         ref={(node) => this._amount = node}

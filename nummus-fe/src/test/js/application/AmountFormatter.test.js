@@ -58,3 +58,12 @@ it('clears input', () => {
   expect(amountFormatter.valueCents()).toEqual(0);
 });
 
+
+it('treats zero cents as empty', () => {
+  const amountFormatter = AmountFormatter.fromCents(0);
+  amountFormatter.keyDown('9');
+  amountFormatter.keyDown('9');
+  amountFormatter.keyDown('9');
+  amountFormatter.keyDown('9');
+  expect(amountFormatter.formatted()).toEqual('99.99');
+});

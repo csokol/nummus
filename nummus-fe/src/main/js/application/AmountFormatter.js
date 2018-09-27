@@ -46,6 +46,9 @@ class AmountFormatter {
     for (let i = 0; i < value.length; i++) {
       formatter.keyDown(value.charAt(i));
     }
+    if (amountCents === 0) {
+      formatter.clear();
+    }
     return formatter;
   }
 }

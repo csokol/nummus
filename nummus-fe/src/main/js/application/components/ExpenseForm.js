@@ -98,14 +98,6 @@ class ExpenseForm extends Component {
                   ref={(node) => this._amount = node}
                   onDigit={this.clearErrors.bind(this)}
                 />
-                {/*<input*/}
-                  {/*type='number'*/}
-                  {/*className="input-group-field amount-input"*/}
-                  {/*name='amount'*/}
-                  {/*onKeyDown={this.amountChanged.bind(this)}*/}
-                  {/*ref={(node) => this._amount = node}*/}
-                  {/*defaultValue={this.amountFormatter.formatted()}*/}
-                {/*/>*/}
               </div>
               <div className='form-error-container'>
                 <span ref={node => this._validationMessages.amount = {empty: node}} className='form-error'>

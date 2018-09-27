@@ -12,3 +12,11 @@ body {
   color: transparent;
   text-shadow: 0 0 0 #000;
 }
+
+.budget-input-group {
+  margin: 0;
+}
+
+.category-budget th {
+  width: 33.33%;
+}

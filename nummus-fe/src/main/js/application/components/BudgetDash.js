@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import CategoryRepository from "../../domain/CategoryRepository";
 import BudgetRepository from "../../domain/BudgetRepository";
+import BudgetInput from "./BudgetInput";
 
 class BudgetDash extends Component {
   static propTypes = {
@@ -12,14 +13,25 @@ class BudgetDash extends Component {
   constructor(props) {
     super(props);
     this.categoriesById = this.props.categoryRepository.categoriesById();
+    this._budgetInputs = [];
+    this._budget = this.props.budgetRepository.currentMonthlyBudget();
+  }
+
+  budgetUpdated() {
+    this.props.budgetRepository.update(this._budget);
   }
 
   render() {
-    const budget = this.props.budgetRepository.currentMonthlyBudget();
-    const tbody = budget.categoryBudgets.map(categoryBudget =>
+    const tbody = this._budget.categoryBudgets.map(categoryBudget =>
       <tr key={categoryBudget.id}>
         <td>{this.categoriesById.get(categoryBudget.categoryId).name}</td>
-        <td>€{categoryBudget.formatedBudgetedAmount()}</td>
+        <td>
+          <BudgetInput
+            ref={node => this._budgetInputs.push(node)}
+            categoryBudget={categoryBudget}
+            budgetUpdated={this.budgetUpdated.bind(this)}
+          />
+        </td>
         <td>€00.00</td>
       </tr>
     );
