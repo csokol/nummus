@@ -97,6 +97,7 @@ class ExpenseForm extends Component {
                 <AmountInput
                   ref={(node) => this._amount = node}
                   onDigit={this.clearErrors.bind(this)}
+                  inputClass='input-group-field amount-input'
                 />
               </div>
               <div className='form-error-container'>

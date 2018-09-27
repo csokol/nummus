@@ -33,7 +33,8 @@ class BudgetInput extends Component {
           initialValue={this.props.categoryBudget.budgeted}
           onDigit={unit}
           onAmountChanged={this.updateBudget.bind(this)}
-          inputClass='budget-input'
+          inputClass='input-group-field budget-input'
+
         />
       </div>
     );
