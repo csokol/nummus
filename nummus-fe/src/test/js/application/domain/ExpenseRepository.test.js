@@ -3,12 +3,10 @@ import Expense from '../../../../main/js/domain/Expense';
 import ExpenseRepository from "../../../../main/js/domain/ExpenseRepository";
 import LocalStorageMock from "../LocalStorageMock";
 
-const localStorageMock = new LocalStorageMock();
-
 test('stores expenses', () => {
-  const localStorage = localStorageMock;
+  const localStorage = new LocalStorageMock();
   const expenses = new ExpenseRepository(localStorage);
-  const expense = new Expense(1, 100, 10);
+  const expense = new Expense({id: 1, amountCents: 100, categoryId: 10});
   expense.date = {
     day: 1,
     month: 1,
@@ -18,13 +16,12 @@ test('stores expenses', () => {
 
   expect(expenses.list()).toHaveLength(1);
   expect(expenses.list()[0]).toEqual(expense);
-  localStorage.clear();
 });
 
 test('stores expenses with no date', () => {
-  const localStorage = localStorageMock;
+  const localStorage = new LocalStorageMock();
   const expenses = new ExpenseRepository(localStorage);
-  const expense = new Expense(1, 100, 10);
+  const expense = new Expense({id: 1, amountCents: 100, categoryId: 10});
   expense.date = undefined;
   expenses.add(expense);
 
@@ -32,6 +29,24 @@ test('stores expenses with no date', () => {
   expect(expenses.list()[0]).toEqual(expense);
   localStorage.clear();
 });
+
+test('aggregates expenses by category', () => {
+  const localStorage = new LocalStorageMock();
+  const expenses = new ExpenseRepository(localStorage);
+
+  expenses.add(new Expense({id: 1, amountCents: 100, categoryId: 1}));
+  expenses.add(new Expense({id: 2, amountCents: 200, categoryId: 1}));
+  expenses.add(new Expense({id: 3, amountCents: 100, categoryId: 2}));
+  expenses.add(new Expense({id: 4, amountCents: 150, categoryId: 2}));
+  expenses.add(new Expense({id: 5, amountCents: 100, categoryId: 3}));
+
+  const amountsByCategory = expenses.amountsByCategory();
+
+  expect(amountsByCategory.get(1)).toEqual(300);
+  expect(amountsByCategory.get(2)).toEqual(250);
+  expect(amountsByCategory.get(3)).toEqual(100);
+});
+
 
 
 

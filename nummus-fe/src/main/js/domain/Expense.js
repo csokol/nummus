@@ -3,7 +3,8 @@ import moment from 'moment';
 const decimalSeparator = (1.1).toLocaleString().substring(1, 2);
 
 class Expense {
-  constructor(id, amountCents, categoryId) {
+  constructor(parameters) {
+    const {id, amountCents, categoryId} = parameters;
     this.id = id;
     this.amountCents = amountCents;
     this.categoryId = categoryId;
@@ -18,7 +19,11 @@ class Expense {
   static createFromState(id, state) {
     let categoryId = state.category.id;
 
-    return new Expense(id, state.amount, categoryId);
+    return new Expense({
+      id: id,
+      amountCents: state.amount,
+      categoryId: categoryId
+    });
   }
 
   amountAsString() {
@@ -36,7 +41,11 @@ class Expense {
   }
 
   static fromJsonObj(obj) {
-    const expense = new Expense(obj.id, obj.amountCents, obj.categoryId);
+    const expense = new Expense({
+      id: obj.id,
+      amountCents: obj.amountCents,
+      categoryId: obj.categoryId
+    });
     expense.date = obj.date;
     return expense;
   }

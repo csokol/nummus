@@ -70,7 +70,11 @@ it('stores expense in localstorage', () => {
   expect(keys).toHaveLength(3);
   let item = localStorageMock.getItem('nummus.io.expenses.1');
 
-  expect(item).toEqual(JSON.stringify(new Expense(1, 10000, 1)));
+  expect(item).toEqual(JSON.stringify(new Expense({
+    id: 1,
+    amountCents: 10000,
+    categoryId: 1
+  })));
   localStorageMock.clear();
 });
 
@@ -79,8 +83,16 @@ it('puts localstorage data into history', () => {
   const expenseKeysKey = nummusPrefix + "expenseKeys";
 
   const div = document.createElement('div');
-  localStorageMock.setItem('nummus.io.expenses.1', JSON.stringify(new Expense(1, 10000, 1)));
-  localStorageMock.setItem('nummus.io.expenses.2', JSON.stringify(new Expense(2, 10000, 1)));
+  localStorageMock.setItem('nummus.io.expenses.1', JSON.stringify(new Expense({
+    id: 1,
+    amountCents: 10000,
+    categoryId: 1
+  })));
+  localStorageMock.setItem('nummus.io.expenses.2', JSON.stringify(new Expense({
+    id: 2,
+    amountCents: 10000,
+    categoryId: 1
+  })));
   localStorageMock.setItem(expenseKeysKey, JSON.stringify(['nummus.io.expenses.1', 'nummus.io.expenses.2']));
   let app = makeApp(div);
 

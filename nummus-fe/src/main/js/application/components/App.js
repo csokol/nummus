@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import ExpensesDash from "./ExpensesDash";
 import BudgetDash from "./BudgetDash";
-import {BrowserRouter as Router, Route, Link} from 'react-router-dom'
-import ExpenseForm from "./ExpenseForm";
+import {BrowserRouter as Router, Link, Route} from 'react-router-dom'
 import UUIDGenerator from "../../domain/UUIDGenerator";
 import CategoryRepository from "../../domain/CategoryRepository";
 import BudgetRepository from "../../domain/BudgetRepository";
+import ExpenseRepository from "../../domain/ExpenseRepository";
 
 class App extends Component {
 
@@ -13,6 +13,7 @@ class App extends Component {
     super(props);
     this.categoryRepository = new CategoryRepository();
     this.budgetRepository = new BudgetRepository(localStorage, this.categoryRepository);
+    this.expenseRepository = new ExpenseRepository(localStorage);
   }
 
   makeExpensesDash() {
@@ -23,6 +24,7 @@ class App extends Component {
     return <BudgetDash
       categoryRepository={this.categoryRepository}
       budgetRepository={this.budgetRepository}
+      amountSpentByCategory={this.expenseRepository.amountsByCategory()}
     />
   }
 

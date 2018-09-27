@@ -13,8 +13,8 @@ global.localStorage = localStorageMock;
 
 test('shows expenses', () => {
   const expenseRepository = new ExpenseRepository(localStorageMock);
-  expenseRepository.add(new Expense(1, 1000, 1));
-  expenseRepository.add(new Expense(2, 2000, 2));
+  expenseRepository.add(new Expense({id: 1, amountCents: 1000, categoryId: 1}));
+  expenseRepository.add(new Expense({id: 2, amountCents: 2000, categoryId: 2}));
   const component = makeComponent(expenseRepository);
 
   let items = ReactTestUtils.scryRenderedDOMComponentsWithTag(component, 'tr');
@@ -27,7 +27,7 @@ test('shows expenses', () => {
 
 test('shows expense with no date', () => {
   const expenseRepository = new ExpenseRepository(localStorageMock);
-  const expense = new Expense(2, 2000, 2);
+  const expense = new Expense({id: 2, amountCents: 2000, categoryId: 2});
   expense.date = undefined;
   expenseRepository.add(expense);
   const component = makeComponent(expenseRepository);
@@ -42,8 +42,8 @@ test('shows expense with no date', () => {
 
 test('deletes expense', () => {
   const expenseRepository = new ExpenseRepository(localStorageMock);
-  expenseRepository.add(new Expense(1, 1000, 1));
-  expenseRepository.add(new Expense(2, 2000, 2));
+  expenseRepository.add(new Expense({id: 1, amountCents: 1000, categoryId: 1}));
+  expenseRepository.add(new Expense({id: 2, amountCents: 2000, categoryId: 2}));
   const component = makeComponent(expenseRepository);
 
   const deleteButton = ReactTestUtils.scryRenderedDOMComponentsWithClass(component, 'delete-expense')[0];

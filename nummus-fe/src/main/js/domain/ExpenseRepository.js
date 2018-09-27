@@ -37,6 +37,14 @@ class ExpenseRepository {
     this.localStorage.setItem(expenseKeysKey, JSON.stringify(expenseKeys));
   }
 
+  amountsByCategory() {
+    return this.list()
+      .reduce((map, expense) => {
+        const currentAmount = map.get(expense.categoryId) || 0;
+        map.set(expense.categoryId, currentAmount + expense.amountCents);
+        return map;
+      }, new Map());
+  }
 }
 
 export default ExpenseRepository;
