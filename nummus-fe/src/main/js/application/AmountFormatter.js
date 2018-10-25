@@ -1,5 +1,5 @@
 
-const decimalSeparator = (1.1).toLocaleString().substring(1, 2);
+const decimalSeparator = ".";
 class AmountFormatter {
 
   constructor() {

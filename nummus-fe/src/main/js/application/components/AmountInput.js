@@ -8,7 +8,10 @@ class AmountInput extends Component {
     super(props);
     this.amountFormatter = AmountFormatter.fromCents(this.props.initialValue);
     this._amount = null;
-    this.state = {value: this.props.initialValue};
+    this.state = {
+      value: this.props.initialValue,
+      formattedValue: this.amountFormatter.formatted()
+    };
   }
 
   static defaultProps = {
@@ -27,6 +30,7 @@ class AmountInput extends Component {
 
   amountChanged(event) {
     let {key} = event;
+    event.preventDefault();
     const keyCode = key.charCodeAt(0);
     if (key === 'Tab') {
       return;
@@ -40,9 +44,11 @@ class AmountInput extends Component {
       this.amountFormatter.keyDown(String.fromCharCode(keyCode));
       this.props.onDigit(key);
     }
-    this._amount.value = this.amountFormatter.formatted();
     this.props.onAmountChanged(this.amountFormatter.valueCents());
-    this.setState({value: this.amountFormatter.valueCents()});
+    this.setState({
+      value: this.amountFormatter.valueCents(),
+      formattedValue: this.amountFormatter.formatted()
+    });
   }
 
   render() {
@@ -51,9 +57,12 @@ class AmountInput extends Component {
         type='number'
         className={this.props.inputClass}
         name='amount'
+        onChange={() => undefined}
         onKeyDown={this.amountChanged.bind(this)}
-        ref={(node) => this._amount = node}
-        defaultValue={this.amountFormatter.formatted()}
+        ref={(node) => {
+          this._amount = node;
+        }}
+        value={this.state.formattedValue}
       />
     );
   }

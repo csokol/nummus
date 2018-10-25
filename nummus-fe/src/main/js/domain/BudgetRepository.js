@@ -3,7 +3,6 @@ import MonthlyBudget from "./MonthlyBudget";
 import CategoryBudget from "./CategoryBudget";
 
 const nummusPrefix = "nummus.io";
-const monthlyBudgetsKey = nummusPrefix + ".expenseKeys";
 
 class BudgetRepository {
   _categoryRepository;
@@ -23,8 +22,8 @@ class BudgetRepository {
     const found = this._localStorage.getItem(key);
 
     if (found) {
-      const budget = Object.assign(new MonthlyBudget, JSON.parse(found));
-      budget.categoryBudgets = budget.categoryBudgets.map(obj => Object.assign(new CategoryBudget, obj))
+      const budget = Object.assign(new MonthlyBudget(), JSON.parse(found));
+      budget.categoryBudgets = budget.categoryBudgets.map(obj => Object.assign(new CategoryBudget(), obj));
       return budget;
     }
 

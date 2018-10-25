@@ -6,9 +6,9 @@ import CategoryBudget from "../../domain/CategoryBudget";
 const unit = x => x;
 class BudgetInput extends Component {
 
-  constructor(props) {
-    super(props);
-  }
+  // constructor(props) {
+  //   super(props);
+  // }
 
   static propTypes = {
     categoryBudget: PropTypes.instanceOf(CategoryBudget),
@@ -34,7 +34,6 @@ class BudgetInput extends Component {
           onDigit={unit}
           onAmountChanged={this.updateBudget.bind(this)}
           inputClass='input-group-field budget-input'
-
         />
       </div>
     );

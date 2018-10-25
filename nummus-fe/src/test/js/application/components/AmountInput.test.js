@@ -24,6 +24,7 @@ it('stores amount on state', () => {
 
   expect(component.state).toEqual({
     value: 10050,
+    formattedValue: "100.50"
   });
 
   ReactDOM.unmountComponentAtNode(div);
