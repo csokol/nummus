@@ -10,8 +10,8 @@ class Expense {
     this.categoryId = categoryId;
     const now = moment();
     this.date = {
-      day: now.day(),
-      month: now.month(),
+      day: now.date(),
+      month: now.month() + 1,
       year: now.year(),
     }
   }

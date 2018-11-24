@@ -2,20 +2,17 @@
 import Expense from '../../../../main/js/domain/Expense';
 import ExpenseRepository from "../../../../main/js/domain/ExpenseRepository";
 import LocalStorageMock from "../LocalStorageMock";
+import moment from 'moment';
 
 test('stores expenses', () => {
   const localStorage = new LocalStorageMock();
   const expenses = new ExpenseRepository(localStorage);
   const expense = new Expense({id: 1, amountCents: 100, categoryId: 10});
-  expense.date = {
-    day: 1,
-    month: 1,
-    year: 2018,
-  };
   expenses.add(expense);
 
-  expect(expenses.list()).toHaveLength(1);
-  expect(expenses.list()[0]).toEqual(expense);
+  let firstExpense = expenses.list()[0];
+  expect(firstExpense).toEqual(expense);
+  expect(firstExpense.formattedDate()).toEqual(moment().format("DD-MM-YYYY"));
 });
 
 test('stores expenses with no date', () => {

@@ -6,6 +6,7 @@ class LocalStorageMock {
   }
 
   setItem(k, v){
+    this[k] = null;
     this.store.set(k, v);
   }
 

@@ -10,6 +10,7 @@ class BudgetRepository {
   constructor(localStorage, categoryRepository) {
     this._localStorage = localStorage;
     this._categoryRepository = categoryRepository;
+    this.currentMonthlyBudget();
   }
 
   list() {
@@ -22,7 +23,7 @@ class BudgetRepository {
     const found = this._localStorage.getItem(key);
 
     if (found) {
-      const budget = Object.assign(new MonthlyBudget(), JSON.parse(found));
+      const budget = this._parseObject(found);
       budget.categoryBudgets = budget.categoryBudgets.map(obj => Object.assign(new CategoryBudget(), obj));
       return budget;
     }
@@ -36,10 +37,35 @@ class BudgetRepository {
     return newBudget;
   }
 
+  _parseObject(found) {
+    return Object.assign(new MonthlyBudget(), JSON.parse(found));
+  }
+
   update(monthlyBudget) {
     const key = `${nummusPrefix}.monthlyBudgets.${monthlyBudget.month}`;
     this._localStorage.setItem(key, JSON.stringify(monthlyBudget));
   }
+
+  listMonths() {
+    return Object.keys(this._localStorage)
+      .filter(k => k.startsWith("nummus.io.monthlyBudgets"))
+      .map(k => this._parseObject(this._localStorage.getItem(k)))
+      .map(budget => budget.month).sort().reverse()
+  }
 }
 
 export default BudgetRepository;
+
+
+
+
+
+
+
+
+
+
+
+
+
+

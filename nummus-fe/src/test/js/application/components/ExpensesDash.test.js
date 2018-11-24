@@ -15,6 +15,7 @@ class LocalStorageMock {
   getItem(key) {
     return this.store.get(key);
   }
+
   setItem(k, v){
     this.store.set(k, v);
   }

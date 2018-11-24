@@ -4,6 +4,7 @@ import ExpenseRepository from "../../../../main/js/domain/ExpenseRepository";
 import LocalStorageMock from "../LocalStorageMock";
 import BudgetRepository from "../../../../main/js/domain/BudgetRepository";
 import CategoryRepository from "../../../../main/js/domain/CategoryRepository";
+import moment from "moment";
 
 const localStorageMock = new LocalStorageMock();
 
@@ -52,5 +53,12 @@ test('updates category budget', () => {
   expect(monthlyBudget.categoryBudgets[0].budgeted).toEqual(1000);
 });
 
+test('lists budget months', () => {
+  const storage = new LocalStorageMock();
+  const categoryRepository = new CategoryRepository();
+  const budgetRepository = new BudgetRepository(storage, categoryRepository);
 
-
+  let months = budgetRepository.listMonths();
+  expect(months).toHaveLength(1);
+  expect(months[0]).toEqual(moment().format("YYYY_MM"));
+});

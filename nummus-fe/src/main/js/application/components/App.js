@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import ExpensesDash from "./ExpensesDash";
 import BudgetDash from "./BudgetDash";
+import MonthSelector from "./MonthSelector";
 import {BrowserRouter as Router, Link, Route} from 'react-router-dom'
 import UUIDGenerator from "../../domain/UUIDGenerator";
 import CategoryRepository from "../../domain/CategoryRepository";
@@ -41,6 +42,9 @@ class App extends Component {
                 </li>
                 <li>
                   <Link to="/nummus/">Expense</Link>
+                </li>
+                <li>
+                  <MonthSelector budgetRepository={this.budgetRepository}/>
                 </li>
               </ul>
             </div>
