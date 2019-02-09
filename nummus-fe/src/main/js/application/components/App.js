@@ -36,7 +36,7 @@ class App extends Component {
           <div className="top-bar" id="responsive-menu">
             <div className="top-bar-left">
               <ul className="dropdown menu" data-dropdown-menu>
-                <li className="menu-text"><Link to="/nummus/">Nummus budgeting</Link></li>
+                <li className="menu-text"><Link to="/nummus/">Nummus</Link></li>
                 <li>
                   <Link to="/nummus/budget/">Budget</Link>
                 </li>
