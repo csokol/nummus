@@ -49,6 +49,11 @@ class Expense {
     expense.date = obj.date;
     return expense;
   }
+
+  getDateMoment() {
+    const fmtDate = `${this.date.day}-${this.date.month}-${this.date.year}`;
+    return moment(fmtDate, "DD-MM-YYYY");
+  }
 }
 
 export default Expense;

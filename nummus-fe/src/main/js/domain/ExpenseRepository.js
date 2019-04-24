@@ -13,7 +13,8 @@ class ExpenseRepository {
     return this._getExpenseKeys()
       .map(this.localStorage.getItem.bind(this.localStorage))
       .map(JSON.parse)
-      .map(Expense.fromJsonObj);
+      .map(Expense.fromJsonObj)
+      .sort((a, b) => -a.getDateMoment().diff(b.getDateMoment(), 'minutes'));
   }
 
   _getExpenseKeys() {
