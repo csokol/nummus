@@ -45,6 +45,18 @@ class ExpenseRepository {
         return map;
       }, new Map());
   }
+
+  dump() {
+    return JSON.stringify(this.list());
+  }
+
+  loadDump(jsonString) {
+    this.list().forEach(this.delete.bind(this));
+    JSON.parse(jsonString)
+      .map(Expense.fromJsonObj)
+      .forEach(this.add.bind(this));
+  }
+
 }
 
 export default ExpenseRepository;

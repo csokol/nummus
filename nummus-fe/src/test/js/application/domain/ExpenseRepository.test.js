@@ -45,5 +45,39 @@ test('aggregates expenses by category', () => {
 });
 
 
+test('exports expenses in json', () => {
+  const localStorage = new LocalStorageMock();
+  const expenses = new ExpenseRepository(localStorage);
 
+  function fixedDateProvider() {
+    return moment("01-10-2018", "MM-DD-YYYY");
+  }
+
+  expenses.add(new Expense({id: 1, amountCents: 100, categoryId: 1}, fixedDateProvider));
+  expenses.add(new Expense({id: 2, amountCents: 200, categoryId: 1}, fixedDateProvider));
+
+  const jsonString = expenses.dump();
+
+  // language=JSON
+  expect(jsonString).toEqual(JSON.stringify(JSON.parse("[\n  {\n    \"id\": 1,\n    \"amountCents\": 100,\n    \"categoryId\": 1,\n    \"date\": {\n      \"day\": 10,\n      \"month\": 1,\n      \"year\": 2018\n    }\n  },\n  {\n    \"id\": 2,\n    \"amountCents\": 200,\n    \"categoryId\": 1,\n    \"date\": {\n      \"day\": 10,\n      \"month\": 1,\n      \"year\": 2018\n    }\n  }\n]")));
+});
+
+
+test('imports json dump', () => {
+  const localStorage = new LocalStorageMock();
+  const expenses = new ExpenseRepository(localStorage);
+  function fixedDateProvider() {
+    return moment("01-10-2018", "MM-DD-YYYY");
+  }
+
+  // language=JSON
+  let json = "[\n  {\n    \"id\": 1,\n    \"amountCents\": 100,\n    \"categoryId\": 1,\n    \"date\": {\n      \"day\": 10,\n      \"month\": 1,\n      \"year\": 2018\n    }\n  },\n  {\n    \"id\": 2,\n    \"amountCents\": 200,\n    \"categoryId\": 1,\n    \"date\": {\n      \"day\": 10,\n      \"month\": 1,\n      \"year\": 2018\n    }\n  }\n]";
+  expenses.add(new Expense({id: 3, amountCents: 100, categoryId: 1}, fixedDateProvider));
+
+  expenses.loadDump(json);
+
+  expect(expenses.list()).toHaveLength(2);
+  expect(expenses.list()[0]).toEqual(new Expense({id: 1, amountCents: 100, categoryId: 1}, fixedDateProvider));
+  expect(expenses.list()[1]).toEqual(new Expense({id: 2, amountCents: 200, categoryId: 1}, fixedDateProvider));
+});
 

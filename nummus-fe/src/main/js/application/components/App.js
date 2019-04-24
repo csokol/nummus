@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import ExpensesDash from "./ExpensesDash";
 import BudgetDash from "./BudgetDash";
 import MonthSelector from "./MonthSelector";
+import AdminDash from "./AdminDash";
 import {BrowserRouter as Router, Link, Route} from 'react-router-dom'
 import UUIDGenerator from "../../domain/UUIDGenerator";
 import CategoryRepository from "../../domain/CategoryRepository";
@@ -18,7 +19,7 @@ class App extends Component {
   }
 
   makeExpensesDash() {
-    return <ExpensesDash idGenerator={new UUIDGenerator()} categoryRepository={this.categoryRepository} />
+    return <ExpensesDash idGenerator={new UUIDGenerator()} categoryRepository={this.categoryRepository}/>
   }
 
   makeBudgetDash() {
@@ -26,6 +27,12 @@ class App extends Component {
       categoryRepository={this.categoryRepository}
       budgetRepository={this.budgetRepository}
       amountSpentByCategory={this.expenseRepository.amountsByCategory()}
+    />
+  }
+
+  makeAdminDash() {
+    return <AdminDash
+      expenseRepository={this.expenseRepository}
     />
   }
 
@@ -52,6 +59,7 @@ class App extends Component {
           <div className="grid-container main-container">
             <Route exact path="/nummus/" component={this.makeExpensesDash.bind(this)}/>
             <Route path="/nummus/budget/" component={this.makeBudgetDash.bind(this)}/>
+            <Route path="/nummus/admin/" component={this.makeAdminDash.bind(this)}/>
           </div>
         </div>
       </Router>

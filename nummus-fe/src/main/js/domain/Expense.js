@@ -3,12 +3,12 @@ import moment from 'moment';
 const decimalSeparator = (1.1).toLocaleString().substring(1, 2);
 
 class Expense {
-  constructor(parameters) {
+  constructor(parameters, dateProvider = function() { return moment() }) {
     const {id, amountCents, categoryId} = parameters;
     this.id = id;
     this.amountCents = amountCents;
     this.categoryId = categoryId;
-    const now = moment();
+    const now = dateProvider();
     this.date = {
       day: now.date(),
       month: now.month() + 1,
