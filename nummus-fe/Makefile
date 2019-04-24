@@ -8,3 +8,6 @@ test:
 
 run:
 	yarn start
+
+deploy:
+	yarn run deploy
