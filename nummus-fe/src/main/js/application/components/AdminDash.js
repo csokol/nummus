@@ -9,20 +9,28 @@ class AdminDash extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {};
+    this.state.dump = this.props.expenseRepository.dump();
   }
 
   loadDump() {
-    this.props.expenseRepository.loadDump(this._dumpInput.value);
+    this.props.expenseRepository.loadDump(this.state.dump);
+  }
+
+  textAreaChanged(event) {
+    this.setState({
+      dump: event.target.value
+    });
   }
 
   render() {
     return (
       <div>
         <h1>Admin</h1>
-        <pre>{this.props.expenseRepository.dump()}</pre>
         <textarea
           ref={(node) => this._dumpInput = node}
-          value={this.props.expenseRepository.dump()}
+          value={this.state.dump}
+          onChange={this.textAreaChanged.bind(this)}
         />
         <button
           ref={(node) => this._submitButton = node}
