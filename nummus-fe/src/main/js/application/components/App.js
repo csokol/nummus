@@ -16,10 +16,18 @@ class App extends Component {
     this.categoryRepository = new CategoryRepository();
     this.budgetRepository = new BudgetRepository(localStorage, this.categoryRepository);
     this.expenseRepository = new ExpenseRepository(localStorage);
+
+    this.state = {
+      selectedMonth: this.budgetRepository.currentMonth()
+    }
   }
 
   makeExpensesDash() {
-    return <ExpensesDash idGenerator={new UUIDGenerator()} categoryRepository={this.categoryRepository}/>
+    return <ExpensesDash
+      idGenerator={new UUIDGenerator()}
+      categoryRepository={this.categoryRepository}
+      selectedMonth={this.state.selectedMonth}
+    />;
   }
 
   makeBudgetDash() {
@@ -34,6 +42,12 @@ class App extends Component {
     return <AdminDash
       expenseRepository={this.expenseRepository}
     />
+  }
+
+  monthChanged(month) {
+    this.setState({
+      selectedMonth: month
+    });
   }
 
   render() {
@@ -51,7 +65,7 @@ class App extends Component {
                   <Link to="/nummus/">Expense</Link>
                 </li>
                 <li>
-                  <MonthSelector budgetRepository={this.budgetRepository}/>
+                  <MonthSelector budgetRepository={this.budgetRepository} onMonthChanged={this.monthChanged.bind(this)}/>
                 </li>
               </ul>
             </div>

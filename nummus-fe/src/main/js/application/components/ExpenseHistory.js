@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ExpenseRepository from "../../domain/ExpenseRepository";
 import AmountFormatter from "../AmountFormatter";
+import BudgetRepository from "../../domain/BudgetRepository";
 
 
 class ExpenseHistory extends Component {
@@ -9,12 +10,14 @@ class ExpenseHistory extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      expenses: this.props.expenseRepository.list()
+      expenses: this.props.expenses
     };
   }
 
   static propTypes = {
     expenseRepository: PropTypes.instanceOf(ExpenseRepository),
+    selectedMonth: PropTypes.instanceOf(BudgetRepository.YearMonth),
+    expenses: PropTypes.array,
     categoriesById: PropTypes.object,
   };
 
@@ -48,7 +51,7 @@ class ExpenseHistory extends Component {
   deleteExpense(expense) {
     return () => {
       this.props.expenseRepository.delete(expense);
-      this.setState({ expenses: this.props.expenseRepository.list()});
+      this.setState({ expenses: this.props.expenseRepository.findBy(this.props.selectedMonth)});
     }
   }
 }

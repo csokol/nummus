@@ -5,20 +5,31 @@ import CategoryBudget from "./CategoryBudget";
 const nummusPrefix = "nummus.io";
 
 class BudgetRepository {
-  _categoryRepository;
-
-  constructor(localStorage, categoryRepository) {
+  constructor(localStorage, categoryRepository, dateProvider = currentDateProvider) {
     this._localStorage = localStorage;
     this._categoryRepository = categoryRepository;
-    this.currentMonthlyBudget();
+    this._dateProvider = dateProvider;
+    this._initializeBudgets();
   }
 
   list() {
     return this.categories;
   }
 
+  _now() {
+    return this._dateProvider()
+  }
+
   currentMonthlyBudget() {
-    const yearMonth = moment().format("YYYY_MM");
+    const yearMonth = this._now().format("YYYY_MM");
+    return this._findOrCreate(yearMonth);
+  }
+
+  findMonth(yearMonth) {
+    return this.listMonths().filter(m => m.yearMonth === yearMonth)[0];
+  }
+
+  _findOrCreate(yearMonth) {
     const key = `${nummusPrefix}.monthlyBudgets.${yearMonth}`;
     const found = this._localStorage.getItem(key);
 
@@ -50,8 +61,40 @@ class BudgetRepository {
     return Object.keys(this._localStorage)
       .filter(k => k.startsWith("nummus.io.monthlyBudgets"))
       .map(k => this._parseObject(this._localStorage.getItem(k)))
-      .map(budget => budget.month).sort().reverse()
+      .map(budget => new BudgetRepository.YearMonth(budget.month, this._dateProvider))
+      .sort()
+      .reverse()
   }
+
+  currentMonth() {
+    return this.listMonths().filter(m => m.is_current)[0];
+  }
+
+  _initializeBudgets() {
+    this._findOrCreate(this._now().add(1, 'month').format("YYYY_MM"));
+    this._findOrCreate(this._now().format("YYYY_MM"));
+    this._findOrCreate(this._now().subtract(1, 'month').format("YYYY_MM"));
+  }
+
+  static YearMonth = class {
+    constructor(yearMonth, dateProvider = currentDateProvider) {
+      this.is_current = dateProvider().format("YYYY_MM") === yearMonth;
+      this.yearMonth = yearMonth;
+    }
+
+    formatted() {
+      return this.toMoment().format("MMM YY");
+    }
+
+    toMoment() {
+      return moment(this.yearMonth, "YYYY_MM")
+    }
+
+  }
+}
+
+function currentDateProvider() {
+  return moment();
 }
 
 export default BudgetRepository;

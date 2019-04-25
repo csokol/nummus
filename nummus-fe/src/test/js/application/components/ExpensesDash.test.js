@@ -9,6 +9,8 @@ import ExpenseFormControl from './ExpenseForm.test';
 import ReactTestUtils from "react-dom/test-utils";
 import CategoryRepository from "../../../../main/js/domain/CategoryRepository";
 import ExpenseRepository from "../../../../main/js/domain/ExpenseRepository";
+import BudgetRepository from "../../../../main/js/domain/BudgetRepository";
+import moment from 'moment';
 
 class LocalStorageMock {
   store = new Map();
@@ -30,7 +32,10 @@ const localStorageMock = new LocalStorageMock();
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
-  ReactDOM.render(<ExpensesDash categoryRepository={new CategoryRepository()}/>, div);
+  ReactDOM.render(<ExpensesDash
+    categoryRepository={new CategoryRepository()}
+    selectedMonth={new BudgetRepository.YearMonth(moment().format("YYYY_MM"))}
+  />, div);
 });
 
 it('adds expense into history', () => {
@@ -107,5 +112,6 @@ function makeApp(div) {
     idGenerator={new AutoIncrementIdGenerator()}
     expenseRepository={new ExpenseRepository(localStorageMock)}
     categoryRepository={new CategoryRepository()}
+    selectedMonth={new BudgetRepository.YearMonth(moment().format("YYYY_MM"))}
   />, div);
 }

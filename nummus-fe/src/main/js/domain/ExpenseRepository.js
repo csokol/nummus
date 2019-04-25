@@ -5,6 +5,7 @@ const expenseKeysKey = nummusPrefix + ".expenseKeys";
 
 class ExpenseRepository {
   localStorage;
+
   constructor(localStorage) {
     this.localStorage = localStorage;
   }
@@ -58,6 +59,14 @@ class ExpenseRepository {
       .forEach(this.add.bind(this));
   }
 
+  findBy(yearMonth) {
+    let yearMonthMoment = yearMonth.toMoment();
+    return this.list()
+      .filter(expense => {
+        let expenseDate = expense.getDateMoment();
+        return expenseDate.month() === yearMonthMoment.month() && expenseDate.year() === yearMonthMoment.year();
+      });
+  }
 }
 
 export default ExpenseRepository;

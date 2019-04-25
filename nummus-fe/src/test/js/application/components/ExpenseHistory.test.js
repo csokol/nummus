@@ -7,7 +7,8 @@ import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 import ExpenseRepository from "../../../../main/js/domain/ExpenseRepository";
 import LocalStorageMock from "../LocalStorageMock";
-
+import BudgetRepository from "../../../../main/js/domain/BudgetRepository";
+import moment from 'moment';
 const localStorageMock = new LocalStorageMock();
 global.localStorage = localStorageMock;
 
@@ -63,6 +64,8 @@ function makeComponent(expenseRepository) {
     <ExpenseHistory
       categoriesById={categoriesById}
       expenseRepository={expenseRepository}
+      selectedMonth={new BudgetRepository.YearMonth(moment().format("YYYY_MM"))}
+      expenses={expenseRepository.list()}
     />, div);
   return component;
 }

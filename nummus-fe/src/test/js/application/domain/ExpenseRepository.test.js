@@ -3,6 +3,7 @@ import Expense from '../../../../main/js/domain/Expense';
 import ExpenseRepository from "../../../../main/js/domain/ExpenseRepository";
 import LocalStorageMock from "../LocalStorageMock";
 import moment from 'moment';
+import BudgetRepository from "../../../../main/js/domain/BudgetRepository";
 
 test('stores expenses', () => {
   const localStorage = new LocalStorageMock();
@@ -62,7 +63,6 @@ test('exports expenses in json', () => {
   expect(jsonString).toEqual(JSON.stringify(JSON.parse("[\n  {\n    \"id\": 1,\n    \"amountCents\": 100,\n    \"categoryId\": 1,\n    \"date\": {\n      \"day\": 10,\n      \"month\": 1,\n      \"year\": 2018\n    }\n  },\n  {\n    \"id\": 2,\n    \"amountCents\": 200,\n    \"categoryId\": 1,\n    \"date\": {\n      \"day\": 10,\n      \"month\": 1,\n      \"year\": 2018\n    }\n  }\n]")));
 });
 
-
 test('imports json dump', () => {
   const localStorage = new LocalStorageMock();
   const expenses = new ExpenseRepository(localStorage);
@@ -81,3 +81,15 @@ test('imports json dump', () => {
   expect(expenses.list()[1]).toEqual(new Expense({id: 2, amountCents: 200, categoryId: 1}, fixedDateProvider));
 });
 
+test('finds by month', () => {
+  const localStorage = new LocalStorageMock();
+  const expenses = new ExpenseRepository(localStorage);
+
+  expenses.add(new Expense({id: 1, amountCents: 100, categoryId: 1}, () => moment("01-10-2018", "DD-MM-YYYY")));
+  expenses.add(new Expense({id: 2, amountCents: 100, categoryId: 1}, () => moment("01-11-2018", "DD-MM-YYYY")));
+  expenses.add(new Expense({id: 3, amountCents: 100, categoryId: 1}, () => moment("01-10-2018", "DD-MM-YYYY")));
+  expenses.add(new Expense({id: 4, amountCents: 100, categoryId: 1}, () => moment("01-10-2019", "DD-MM-YYYY")));
+
+
+  expect(expenses.findBy(new BudgetRepository.YearMonth("2018_10"))).toHaveLength(2);
+});

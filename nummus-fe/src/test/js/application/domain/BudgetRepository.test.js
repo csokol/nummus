@@ -32,9 +32,34 @@ test('creates budget only on the first time', () => {
 
   const monthlyBudget1 = budgetRepository1.currentMonthlyBudget();
   const monthlyBudget2 = budgetRepository2.currentMonthlyBudget();
+
   expect(monthlyBudget1.categoryBudgets).toHaveLength(categoryRepository.list().length);
   expect(monthlyBudget2).toEqual(monthlyBudget1);
-  expect(setItemCalls).toEqual(1);
+});
+
+test('creates three months window budgets', () => {
+  const storage = new LocalStorageMock();
+  let setItemCalls = 0;
+  const categoryRepository = new CategoryRepository();
+
+  function fixedDateProvider() {
+    return moment("01-10-2018", "DD-MM-YYYY");
+  }
+
+  const budgetRepository = new BudgetRepository(storage, categoryRepository, fixedDateProvider);
+
+  const months = budgetRepository.listMonths();
+
+  expect(months).toHaveLength(3);
+
+  expect(months[0].yearMonth).toEqual("2018_09");
+  expect(months[0].is_current).toEqual(false);
+
+  expect(months[1].yearMonth).toEqual("2018_10");
+  expect(months[1].is_current).toEqual(true);
+
+  expect(months[2].yearMonth).toEqual("2018_11");
+  expect(months[2].is_current).toEqual(false);
 });
 
 test('updates category budget', () => {
@@ -53,12 +78,3 @@ test('updates category budget', () => {
   expect(monthlyBudget.categoryBudgets[0].budgeted).toEqual(1000);
 });
 
-test('lists budget months', () => {
-  const storage = new LocalStorageMock();
-  const categoryRepository = new CategoryRepository();
-  const budgetRepository = new BudgetRepository(storage, categoryRepository);
-
-  let months = budgetRepository.listMonths();
-  expect(months).toHaveLength(1);
-  expect(months[0]).toEqual(moment().format("YYYY_MM"));
-});
