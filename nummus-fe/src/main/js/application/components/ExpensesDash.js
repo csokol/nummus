@@ -15,7 +15,7 @@ class ExpensesDash extends Component {
     super(props);
     this.categories = this.props.categoryRepository.list();
     this.categoriesById = this.props.categoryRepository.categoriesById();
-    this.expenseRepository = new ExpenseRepository(localStorage);
+    this.expenseRepository = this.props.expenseRepository || new ExpenseRepository(localStorage);
     this.expenses = this.expenseRepository.list();
   }
 
@@ -28,6 +28,7 @@ class ExpensesDash extends Component {
       next: PropTypes.func,
     }),
     categoryRepository: PropTypes.instanceOf(CategoryRepository),
+    expenseRepository: PropTypes.instanceOf(ExpenseRepository),
   };
 
 

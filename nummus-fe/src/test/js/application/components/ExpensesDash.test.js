@@ -8,6 +8,7 @@ import ExpenseHistory from '../../../../main/js/application/components/ExpenseHi
 import ExpenseFormControl from './ExpenseForm.test';
 import ReactTestUtils from "react-dom/test-utils";
 import CategoryRepository from "../../../../main/js/domain/CategoryRepository";
+import ExpenseRepository from "../../../../main/js/domain/ExpenseRepository";
 
 class LocalStorageMock {
   store = new Map();
@@ -26,8 +27,6 @@ class LocalStorageMock {
 }
 
 const localStorageMock = new LocalStorageMock();
-global.localStorage = localStorageMock;
-
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
@@ -106,6 +105,7 @@ it('puts localstorage data into history', () => {
 function makeApp(div) {
   return ReactDOM.render(<ExpensesDash
     idGenerator={new AutoIncrementIdGenerator()}
+    expenseRepository={new ExpenseRepository(localStorageMock)}
     categoryRepository={new CategoryRepository()}
   />, div);
 }
