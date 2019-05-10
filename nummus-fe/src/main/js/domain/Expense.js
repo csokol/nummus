@@ -13,6 +13,8 @@ class Expense {
       day: now.date(),
       month: now.month() + 1,
       year: now.year(),
+      hour: now.hour(),
+      minute: now.minute(),
     }
   }
 
@@ -36,8 +38,7 @@ class Expense {
     if (!this.date) {
       return '-'
     }
-    const fmtDate = `${this.date.day}-${this.date.month}-${this.date.year}`;
-    return moment(fmtDate, "DD-MM-YYYY").format("DD-MM-YYYY");
+    return this.getDateMoment().format("DD-MM-YYYY HH:mm");
   }
 
   static fromJsonObj(obj) {
@@ -46,13 +47,19 @@ class Expense {
       amountCents: obj.amountCents,
       categoryId: obj.categoryId
     });
+
     expense.date = obj.date;
+
+    if (expense.date) {
+      expense.date.hour = obj.date.hour || 12;
+      expense.date.minute = obj.date.minute || 0;
+    }
     return expense;
   }
 
   getDateMoment() {
-    const fmtDate = `${this.date.day}-${this.date.month}-${this.date.year}`;
-    return moment(fmtDate, "DD-MM-YYYY");
+    const fmtDate = `${this.date.day}-${this.date.month}-${this.date.year} ${this.date.hour}:${this.date.minute}`;
+    return moment(fmtDate, "DD-MM-YYYY HH:mm");
   }
 }
 

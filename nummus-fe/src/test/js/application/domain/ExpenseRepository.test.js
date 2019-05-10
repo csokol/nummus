@@ -13,7 +13,6 @@ test('stores expenses', () => {
 
   let firstExpense = expenses.list()[0];
   expect(firstExpense).toEqual(expense);
-  expect(firstExpense.formattedDate()).toEqual(moment().format("DD-MM-YYYY"));
 });
 
 test('stores expenses with no date', () => {
@@ -60,18 +59,18 @@ test('exports expenses in json', () => {
   const jsonString = expenses.dump();
 
   // language=JSON
-  expect(jsonString).toEqual(JSON.stringify(JSON.parse("[\n  {\n    \"id\": 1,\n    \"amountCents\": 100,\n    \"categoryId\": 1,\n    \"date\": {\n      \"day\": 10,\n      \"month\": 1,\n      \"year\": 2018\n    }\n  },\n  {\n    \"id\": 2,\n    \"amountCents\": 200,\n    \"categoryId\": 1,\n    \"date\": {\n      \"day\": 10,\n      \"month\": 1,\n      \"year\": 2018\n    }\n  }\n]")));
+  expect(jsonString).toEqual(JSON.stringify(JSON.parse("[\n  {\n    \"id\": 1,\n    \"amountCents\": 100,\n    \"categoryId\": 1,\n    \"date\": {\n      \"day\": 10,\n      \"month\": 1,\n      \"year\": 2018,\n      \"hour\":12,\n      \"minute\":0\n    }\n  },\n  {\n    \"id\": 2,\n    \"amountCents\": 200,\n    \"categoryId\": 1,\n    \"date\": {\n      \"day\": 10,\n      \"month\": 1,\n      \"year\": 2018,\n      \"hour\":12,\n      \"minute\":0\n    }\n  }\n]")));
 });
 
 test('imports json dump', () => {
   const localStorage = new LocalStorageMock();
   const expenses = new ExpenseRepository(localStorage);
   function fixedDateProvider() {
-    return moment("01-10-2018", "MM-DD-YYYY");
+    return moment("01-10-2018 12:00", "MM-DD-YYYY HH:mm");
   }
 
   // language=JSON
-  let json = "[\n  {\n    \"id\": 1,\n    \"amountCents\": 100,\n    \"categoryId\": 1,\n    \"date\": {\n      \"day\": 10,\n      \"month\": 1,\n      \"year\": 2018\n    }\n  },\n  {\n    \"id\": 2,\n    \"amountCents\": 200,\n    \"categoryId\": 1,\n    \"date\": {\n      \"day\": 10,\n      \"month\": 1,\n      \"year\": 2018\n    }\n  }\n]";
+  let json = "[\n  {\n    \"id\": 1,\n    \"amountCents\": 100,\n    \"categoryId\": 1,\n    \"date\": {\n      \"day\": 10,\n      \"month\": 1,\n      \"year\": 2018,\n      \"hour\":0,\n      \"minute\":0\n    }\n  },\n  {\n    \"id\": 2,\n    \"amountCents\": 200,\n    \"categoryId\": 1,\n    \"date\": {\n      \"day\": 10,\n      \"month\": 1,\n      \"year\": 2018,\n      \"hour\":0,\n      \"minute\":0\n    }\n  }\n]";
   expenses.add(new Expense({id: 3, amountCents: 100, categoryId: 1}, fixedDateProvider));
 
   expenses.loadDump(json);
