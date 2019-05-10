@@ -24,7 +24,7 @@ class ExpenseHistory extends Component {
   makeItem(expense, index) {
     let category = this.props.categoriesById.get(expense.categoryId);
     const formattedAmount = AmountFormatter.fromCents(expense.amountCents).formatted();
-    return (<tr key={index}>
+    return (<tr className="expense-row" key={index}>
       <td>{expense.formattedDate()}</td>
       <td>€{formattedAmount}</td>
       <td>{category.name}</td>

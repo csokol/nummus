@@ -62,7 +62,7 @@ class BudgetRepository {
       .filter(k => k.startsWith("nummus.io.monthlyBudgets"))
       .map(k => this._parseObject(this._localStorage.getItem(k)))
       .map(budget => new BudgetRepository.YearMonth(budget.month, this._dateProvider))
-      .sort()
+      .sort((month1, month2) => -month1.toMoment().diff(month2.toMoment(), 'minutes'))
       .reverse()
   }
 
