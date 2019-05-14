@@ -1,4 +1,5 @@
 import Expense from "./Expense";
+import UUIDGenerator from "./UUIDGenerator";
 
 const nummusPrefix = "nummus.io";
 const expenseKeysKey = nummusPrefix + ".expenseKeys";
@@ -66,6 +67,29 @@ class ExpenseRepository {
         let expenseDate = expense.getDateMoment();
         return expenseDate.month() === yearMonthMoment.month() && expenseDate.year() === yearMonthMoment.year();
       });
+  }
+
+  userUuid() {
+    let key = nummusPrefix + ".userUuid";
+    let uuid = this.localStorage.getItem(key) || new UUIDGenerator().next();
+    this.localStorage.setItem(key, uuid);
+
+    return uuid;
+  }
+
+  setUserUuid(uuid) {
+    let key = nummusPrefix + ".userUuid";
+    this.localStorage.setItem(key, uuid);
+  }
+
+  apiKey() {
+    let key = nummusPrefix + ".apiKey";
+    return this.localStorage.getItem(key);
+  }
+
+  saveApiKey(apiKey) {
+    let key = nummusPrefix + ".apiKey";
+    this.localStorage.setItem(key, apiKey);
   }
 }
 
