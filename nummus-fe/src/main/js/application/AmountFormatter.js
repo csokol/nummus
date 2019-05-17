@@ -1,8 +1,8 @@
 
-const decimalSeparator = ".";
 class AmountFormatter {
 
-  constructor() {
+  constructor(decimalSeparator = ".") {
+    this.decimalSeparator = decimalSeparator;
     this.inputDigits = '';
   }
 
@@ -11,7 +11,7 @@ class AmountFormatter {
 
     let centsPart = cents.substring(cents.length - 2, cents.length);
     let unitsPart = cents.substring(0, cents.length - 2);
-    return `${unitsPart}${decimalSeparator}${centsPart}`;
+    return `${unitsPart}${this.decimalSeparator}${centsPart}`;
   }
 
   formattedCents() {
@@ -40,8 +40,8 @@ class AmountFormatter {
     this.inputDigits = '';
   }
 
-  static fromCents(amountCents) {
-    const formatter = new AmountFormatter();
+  static fromCents(amountCents, decimalSeparator = ".") {
+    const formatter = new AmountFormatter(decimalSeparator);
     const value = amountCents.toString();
     for (let i = 0; i < value.length; i++) {
       formatter.keyDown(value.charAt(i));

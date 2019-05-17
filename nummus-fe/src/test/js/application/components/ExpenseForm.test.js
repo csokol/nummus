@@ -28,6 +28,7 @@ it('stores category on state', () => {
   ReactDOM.unmountComponentAtNode(div);
 });
 
+
 it('runs callback on submit', () => {
   let finalState = null;
   const div = document.createElement('div');
@@ -41,12 +42,14 @@ it('runs callback on submit', () => {
 
   formControl.setCategory('1');
   formControl.setAmount('100.50');
+  formControl.setComment('comment');
 
   formControl.submit();
 
   expect(finalState).toEqual({
     category: { name: 'fun money', id: 1 },
     amount: 10050,
+    comment: 'comment'
   });
 
   ReactDOM.unmountComponentAtNode(div);
@@ -156,6 +159,11 @@ it('clears form after submit', () => {
 class ExpenseFormControl {
   constructor(component) {
     this.component = component;
+  }
+
+  setComment(comment) {
+    this.component._comment.value = comment;
+    ReactTestUtils.Simulate.change(this.component._comment);
   }
 
   setCategory(categoryId) {

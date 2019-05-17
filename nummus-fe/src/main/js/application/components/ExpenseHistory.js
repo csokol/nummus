@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import ExpenseRepository from "../../domain/ExpenseRepository";
 import AmountFormatter from "../AmountFormatter";
@@ -10,7 +10,8 @@ class ExpenseHistory extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      expenses: this.props.expenses
+      expenses: this.props.expenses,
+      showCsv: false
     };
   }
 
@@ -41,18 +42,34 @@ class ExpenseHistory extends Component {
 
   render() {
     const rows = this.state.expenses.map(this.makeItem.bind(this));
-    return (<table>
-      <tbody>
-        {rows}
-      </tbody>
-    </table>);
+    return (
+      <div>
+        <table>
+          <tbody>
+          {rows}
+          </tbody>
+        </table>
+        <button className="button expanded large" onClick={() => this.setState({showCsv: !this.state.showCsv})}>As csv</button>
+        <div className={this.state.showCsv ? "" : "hide"}>
+          <pre>{this.expensesAsCsv()}</pre>
+        </div>
+      </div>
+    );
   }
 
   deleteExpense(expense) {
     return () => {
       this.props.expenseRepository.delete(expense);
-      this.setState({ expenses: this.props.expenseRepository.findBy(this.props.selectedMonth)});
+      this.setState({expenses: this.props.expenseRepository.findBy(this.props.selectedMonth)});
     }
+  }
+
+  expensesAsCsv() {
+    return this.props.expenses.map(e => {
+      const formattedAmount = AmountFormatter.fromCents(e.amountCents, ",").formatted();
+      let category = this.props.categoriesById.get(e.categoryId);
+      return `${e.formattedDate()}\t${formattedAmount}\t${category.name}\t${category.tags}\t${e.comment || ""}`
+    }).reverse().join("\n") + "\n\n";
   }
 }
 

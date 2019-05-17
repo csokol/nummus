@@ -127,6 +127,18 @@ class ExpenseForm extends Component {
               </div>
             </div>
           </label>
+          <label>
+            <div>
+              Comment
+              <input
+                ref={(node) => this._comment = node}
+                type="text"
+                className='expense-form-category' name='category'
+                onChange={(event) => this.setState({ comment: event.target.value })}
+              >
+              </input>
+            </div>
+          </label>
 
           <input
             type='submit'

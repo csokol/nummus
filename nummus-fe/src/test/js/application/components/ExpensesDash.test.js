@@ -66,9 +66,11 @@ it('stores expense in localstorage', () => {
   let expenseForm = new ExpenseFormControl(formComponent);
   expenseForm.setAmount('100.00');
   expenseForm.setCategory('1');
+  expenseForm.setComment('comment 1');
   expenseForm.submit();
   expenseForm.setAmount('100.00');
   expenseForm.setCategory('1');
+  expenseForm.setComment('comment 1');
   expenseForm.submit();
 
   let keys = Array.from(localStorageMock.store.keys());
@@ -78,7 +80,8 @@ it('stores expense in localstorage', () => {
   expect(item).toEqual(JSON.stringify(new Expense({
     id: 1,
     amountCents: 10000,
-    categoryId: 1
+    categoryId: 1,
+    comment: 'comment 1',
   })));
   localStorageMock.clear();
 });

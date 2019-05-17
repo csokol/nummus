@@ -11,7 +11,7 @@ test('formats date', () => {
   expect(expense.formattedDate()).toEqual("01-10-2018 12:30");
 });
 
-test('parses json without date', () => {
+test('parses json without date time', () => {
   let expense = Expense.fromJsonObj(
     {
       id: 1,
@@ -26,4 +26,19 @@ test('parses json without date', () => {
   );
 
   expect(expense.formattedDate()).toEqual("01-10-2018 12:00");
+});
+
+test('parses json', () => {
+  let expense = Expense.fromJsonObj(
+    {
+      id: 1,
+      amountCents: 100,
+      categoryId: 1,
+      comment: "some comment"
+    }
+  );
+
+  expect(expense.comment).toEqual("some comment");
+  expect(expense.amountCents).toEqual(100);
+  expect(expense.categoryId).toEqual(1);
 });
