@@ -30,14 +30,21 @@ test('stores expenses with no date', () => {
 test('aggregates expenses by category', () => {
   const localStorage = new LocalStorageMock();
   const expenses = new ExpenseRepository(localStorage);
+  function oct2018() {
+    return moment("01-10-2018", "DD-MM-YYYY");
+  }
+  function nov2018() {
+    return moment("01-11-2018", "DD-MM-YYYY");
+  }
 
-  expenses.add(new Expense({id: 1, amountCents: 100, categoryId: 1}));
-  expenses.add(new Expense({id: 2, amountCents: 200, categoryId: 1}));
-  expenses.add(new Expense({id: 3, amountCents: 100, categoryId: 2}));
-  expenses.add(new Expense({id: 4, amountCents: 150, categoryId: 2}));
-  expenses.add(new Expense({id: 5, amountCents: 100, categoryId: 3}));
+  expenses.add(new Expense({id: 1, amountCents: 100, categoryId: 1}, oct2018));
+  expenses.add(new Expense({id: 2, amountCents: 200, categoryId: 1}, oct2018));
+  expenses.add(new Expense({id: 3, amountCents: 100, categoryId: 2}, oct2018));
+  expenses.add(new Expense({id: 4, amountCents: 150, categoryId: 2}, oct2018));
+  expenses.add(new Expense({id: 5, amountCents: 100, categoryId: 3}, oct2018));
+  expenses.add(new Expense({id: 6, amountCents: 250, categoryId: 3}, nov2018));
 
-  const amountsByCategory = expenses.amountsByCategory();
+  const amountsByCategory = expenses.amountsByCategory(new BudgetRepository.YearMonth("2018_10"));
 
   expect(amountsByCategory.get(1)).toEqual(300);
   expect(amountsByCategory.get(2)).toEqual(250);

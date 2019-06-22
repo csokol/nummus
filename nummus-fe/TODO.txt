@@ -3,9 +3,8 @@
 - better number parsing (done)
 - delete expense (done)
 - add date (done)
-- make it more responsive
+
 - choose date other than today
 - aggregate budget spent
 - aggregates (by month/categories?)
 - category creation
-- backend sync

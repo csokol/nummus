@@ -36,6 +36,10 @@ class Expense {
     return `${units}${decimalSeparator}${cents}`;
   }
 
+  sameMonth(yearMonth) {
+    return this.getDateMoment().format("YYYY_MM") === yearMonth.yearMonth;
+  }
+
   formattedDate() {
     if (!this.date) {
       return '-'

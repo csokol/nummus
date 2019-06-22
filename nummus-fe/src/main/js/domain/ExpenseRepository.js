@@ -40,8 +40,9 @@ class ExpenseRepository {
     this.localStorage.setItem(expenseKeysKey, JSON.stringify(expenseKeys));
   }
 
-  amountsByCategory() {
+  amountsByCategory(yearMonth) {
     return this.list()
+      .filter(expense => expense.sameMonth(yearMonth))
       .reduce((map, expense) => {
         const currentAmount = map.get(expense.categoryId) || 0;
         map.set(expense.categoryId, currentAmount + expense.amountCents);

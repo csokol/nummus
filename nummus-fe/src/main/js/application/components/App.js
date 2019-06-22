@@ -34,7 +34,8 @@ class App extends Component {
     return <BudgetDash
       categoryRepository={this.categoryRepository}
       budgetRepository={this.budgetRepository}
-      amountSpentByCategory={this.expenseRepository.amountsByCategory()}
+      amountSpentByCategory={this.expenseRepository.amountsByCategory(this.state.selectedMonth)}
+      selectedMonth={this.state.selectedMonth}
     />
   }
 

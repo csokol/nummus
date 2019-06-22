@@ -7,58 +7,22 @@ import AmountFormatter from "../AmountFormatter";
 
 class BudgetDash extends Component {
   static propTypes = {
-    budgetRepository: PropTypes.instanceOf(BudgetRepository),
     categoryRepository: PropTypes.instanceOf(CategoryRepository),
     amountSpentByCategory: PropTypes.instanceOf(Map),
+    selectedMonth: PropTypes.instanceOf(BudgetRepository.YearMonth),
   };
 
   constructor(props) {
     super(props);
     this.categoriesById = this.props.categoryRepository.categoriesById();
-    this._budgetInputs = [];
-    this._budget = this.props.budgetRepository.currentMonthlyBudget();
-    this.remainingAmounts = this._budget.categoryBudgets.reduce((remainingAmounts, budget) => {
-      const spent = this.props.amountSpentByCategory.get(budget.categoryId) || 0;
-      const remaining = budget.budgeted - spent;
-      remainingAmounts.set(budget.categoryId, AmountFormatter.fromCents(remaining).formatted());
-      return remainingAmounts;
-    }, new Map());
-    this.state = {
-      remainingAmounts: this.remainingAmounts
-    };
-  }
-
-  budgetUpdated(categoryBudget) {
-    return () => {
-      const spent = this.props.amountSpentByCategory.get(categoryBudget.categoryId) || 0;
-      const remaining = categoryBudget.budgeted - spent;
-      this.state.remainingAmounts.set(categoryBudget.categoryId, AmountFormatter.fromCents(remaining).formatted());
-      this.setState({
-        remainingAmounts: this.state.remainingAmounts
-      });
-      this.props.budgetRepository.update(this._budget);
-    }
-  }
-
-  remainingAmount(categoryBudget) {
-    const spent = this.props.amountSpentByCategory.get(categoryBudget.categoryId) || 0;
-    const remaining = categoryBudget.budgeted - spent;
-    return AmountFormatter.fromCents(remaining).formatted();
   }
 
   render() {
-    const tbody = this._budget.categoryBudgets.map(categoryBudget =>
-      <tr key={categoryBudget.id}>
-        <td>{this.categoriesById.get(categoryBudget.categoryId).name}</td>
+    const tbody = Array.from(this.categoriesById).map(([id, category])  =>
+      <tr key={id}>
+        <td>{this.categoriesById.get(id).name}</td>
         <td>
-          <BudgetInput
-            ref={node => this._budgetInputs.push(node)}
-            categoryBudget={categoryBudget}
-            budgetUpdated={this.budgetUpdated(categoryBudget).bind(this)}
-          />
-        </td>
-        <td>
-          €{this.getAmount(categoryBudget)}
+          €{this.getAmount(id)}
         </td>
       </tr>
     );
@@ -69,8 +33,7 @@ class BudgetDash extends Component {
           <thead>
             <tr className='category-budget'>
               <th>Category</th>
-              <th>Budgeted</th>
-              <th>Available</th>
+              <th>Total spent</th>
             </tr>
           </thead>
           <tbody>
@@ -81,8 +44,9 @@ class BudgetDash extends Component {
     );
   }
 
-  getAmount(categoryBudget) {
-    return this.state.remainingAmounts.get(categoryBudget.categoryId);
+  getAmount(categoryId) {
+    let amount = this.props.amountSpentByCategory.get(categoryId) || 0;
+    return AmountFormatter.fromCents(amount).formatted();
   }
 }
 
