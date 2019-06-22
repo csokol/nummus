@@ -11,5 +11,6 @@
   "start_url": "https://csokol.github.io/nummus/",
   "display": "standalone",
   "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "background_color": "#ffffff",
+  "lang": "en-US"
 }
