@@ -51,6 +51,14 @@ class AmountInput extends Component {
     });
   }
 
+  clear() {
+    this.amountFormatter.clear();
+    this.setState({
+      value: this.amountFormatter.valueCents(),
+      formattedValue: this.amountFormatter.formatted()
+    });
+  }
+
   render() {
     return (
       <input

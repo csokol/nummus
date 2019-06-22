@@ -78,6 +78,8 @@ class ExpenseForm extends Component {
       this.amountFormatter.clear();
       this._amount.value = this.amountFormatter.formatted();
       this._category.value = null;
+      this._comment.value = null;
+      this._amount.clear();
       onSubmit(event, { ...state, amount: amount });
     }
   }
