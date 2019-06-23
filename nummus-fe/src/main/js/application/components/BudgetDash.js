@@ -2,8 +2,30 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import CategoryRepository from "../../domain/CategoryRepository";
 import BudgetRepository from "../../domain/BudgetRepository";
-import BudgetInput from "./BudgetInput";
 import AmountFormatter from "../AmountFormatter";
+import AmountSpent from "../../domain/AmountSpent";
+
+class BudgetEntry extends Component {
+  static propTypes = {
+    amountSpent: PropTypes.instanceOf(AmountSpent),
+    categoryName: PropTypes.string,
+  };
+
+  render() {
+    return <tr>
+      <td>{this.props.categoryName}</td>
+      <td>
+        €{AmountFormatter.fromCents(this.props.amountSpent.amount).formatted()}
+      </td>
+      <td>
+        €{AmountFormatter.fromCents(this.props.amountSpent.projected).formatted()}
+      </td>
+      <td>
+        €{AmountFormatter.fromCents(this.props.amountSpent.spentPreviousMonth).formatted()}
+      </td>
+    </tr>
+  }
+}
 
 class BudgetDash extends Component {
   static propTypes = {
@@ -18,26 +40,27 @@ class BudgetDash extends Component {
   }
 
   render() {
-    const tbody = Array.from(this.categoriesById).map(([id, category])  =>
-      <tr key={id}>
-        <td>{this.categoriesById.get(id).name}</td>
-        <td>
-          €{this.getAmount(id)}
-        </td>
-      </tr>
+    const tbody = Array.from(this.categoriesById).map(([id, category]) =>
+      <BudgetEntry
+        key={id}
+        amountSpent={this._getAmountSpent(id)}
+        categoryName={this.categoriesById.get(id).name}
+      />
     );
     return (
       <div>
-        <h1>Budget dash</h1>
+        <h1>Budget</h1>
         <table>
           <thead>
-            <tr className='category-budget'>
-              <th>Category</th>
-              <th>Total spent</th>
-            </tr>
+          <tr className='category-budget'>
+            <th>Category</th>
+            <th>Total spent</th>
+            <th>Projected</th>
+            <th>Previous month</th>
+          </tr>
           </thead>
           <tbody>
-            {tbody}
+          {tbody}
           </tbody>
         </table>
       </div>
@@ -45,8 +68,16 @@ class BudgetDash extends Component {
   }
 
   getAmount(categoryId) {
-    let amount = this.props.amountSpentByCategory.get(categoryId) || 0;
-    return AmountFormatter.fromCents(amount).formatted();
+    return AmountFormatter.fromCents(this._getAmountSpent(categoryId).amount).formatted();
+  }
+
+  getProjection(categoryId) {
+    return AmountFormatter.fromCents(this._getAmountSpent(categoryId).projected).formatted();
+  }
+
+  _getAmountSpent(categoryId) {
+    let amountSpent = this.props.amountSpentByCategory.get(categoryId);
+    return amountSpent ? amountSpent : new AmountSpent(0);
   }
 }
 

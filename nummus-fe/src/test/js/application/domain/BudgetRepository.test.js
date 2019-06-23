@@ -78,3 +78,13 @@ test('updates category budget', () => {
   expect(monthlyBudget.categoryBudgets[0].budgeted).toEqual(1000);
 });
 
+
+test('calculates previous month', () => {
+  const storage = new LocalStorageMock();
+  const categoryRepository = new CategoryRepository();
+  const budgetRepository = new BudgetRepository(storage, categoryRepository);
+
+  const monthlyBudget = budgetRepository.currentMonthlyBudget();
+  const yearMonth = new BudgetRepository.YearMonth("2019_01");
+  expect(yearMonth.previousMonth().yearMonth).toEqual("2018_12");
+});

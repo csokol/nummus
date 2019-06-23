@@ -37,18 +37,24 @@ test('aggregates expenses by category', () => {
     return moment("01-11-2018", "DD-MM-YYYY");
   }
 
+  function sep2018() {
+    return moment("01-09-2018", "DD-MM-YYYY");
+  }
+
   expenses.add(new Expense({id: 1, amountCents: 100, categoryId: 1}, oct2018));
   expenses.add(new Expense({id: 2, amountCents: 200, categoryId: 1}, oct2018));
   expenses.add(new Expense({id: 3, amountCents: 100, categoryId: 2}, oct2018));
   expenses.add(new Expense({id: 4, amountCents: 150, categoryId: 2}, oct2018));
   expenses.add(new Expense({id: 5, amountCents: 100, categoryId: 3}, oct2018));
   expenses.add(new Expense({id: 6, amountCents: 250, categoryId: 3}, nov2018));
+  expenses.add(new Expense({id: 7, amountCents: 250, categoryId: 3}, sep2018));
 
   const amountsByCategory = expenses.amountsByCategory(new BudgetRepository.YearMonth("2018_10"));
 
-  expect(amountsByCategory.get(1)).toEqual(300);
-  expect(amountsByCategory.get(2)).toEqual(250);
-  expect(amountsByCategory.get(3)).toEqual(100);
+  expect(amountsByCategory.get(1).amount).toEqual(300);
+  expect(amountsByCategory.get(2).amount).toEqual(250);
+  expect(amountsByCategory.get(3).amount).toEqual(100);
+  expect(amountsByCategory.get(3).spentPreviousMonth).toEqual(250);
 });
 
 

@@ -3,8 +3,10 @@
 - better number parsing (done)
 - delete expense (done)
 - add date (done)
+- aggregate budget spent
+
+==
 
 - choose date other than today
-- aggregate budget spent
-- aggregates (by month/categories?)
+- category creation
 - category creation

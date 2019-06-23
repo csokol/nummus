@@ -90,6 +90,12 @@ class BudgetRepository {
       return moment(this.yearMonth, "YYYY_MM")
     }
 
+    previousMonth() {
+      return new BudgetRepository.YearMonth(
+        this.toMoment().subtract(1, 'months').format("YYYY_MM")
+      );
+    }
+
   }
 }
 

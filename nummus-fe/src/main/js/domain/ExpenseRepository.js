@@ -1,5 +1,6 @@
 import Expense from "./Expense";
 import UUIDGenerator from "./UUIDGenerator";
+import AmountSpent from "./AmountSpent";
 
 const nummusPrefix = "nummus.io";
 const expenseKeysKey = nummusPrefix + ".expenseKeys";
@@ -41,10 +42,18 @@ class ExpenseRepository {
   }
 
   amountsByCategory(yearMonth) {
+    let previousMonthAmounts = this._amountsByCategory(yearMonth.previousMonth());
+    return new Map(Array.from(this._amountsByCategory(yearMonth)).map(([id, amount]) => {
+        return [id, new AmountSpent(amount, previousMonthAmounts.get(id))]
+      }
+    ));
+  }
+
+  _amountsByCategory(yearMonth) {
     return this.list()
       .filter(expense => expense.sameMonth(yearMonth))
       .reduce((map, expense) => {
-        const currentAmount = map.get(expense.categoryId) || 0;
+        const currentAmount = map.get(expense.categoryId) ? map.get(expense.categoryId) : 0;
         map.set(expense.categoryId, currentAmount + expense.amountCents);
         return map;
       }, new Map());

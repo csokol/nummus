@@ -1,0 +1,3 @@
+[submodule "nummus-fe/nummus-fe/nummus-backend"]
+	path = nummus-fe/nummus-fe/nummus-backend
+	url = git@github.com:csokol/nummus-backend.git
