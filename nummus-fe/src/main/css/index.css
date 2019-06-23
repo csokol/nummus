@@ -17,6 +17,22 @@ body {
   margin: 0;
 }
 
+.category-budget-table {
+  font-size: 0.7em;
+}
+
+.category-budget th {
+  font-size: 0.8em;
+}
+
+.positive-rate {
+  color: #22bb5b;
+}
+.negative-rate {
+  color: #cc4b37;
+}
+
+
 
 .main-container {
   margin-top: 2em;

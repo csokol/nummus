@@ -10,6 +10,7 @@ class AmountSpent {
     this.amount = amount;
     this.projected = this._calculateProjection();
     this.spentPreviousMonth = spentPreviousMonth;
+    this.rate = this._calculateProjectionRateVsPreviousMonth();
   }
 
   _calculateProjection() {
@@ -17,6 +18,12 @@ class AmountSpent {
     const endOfMonth = this._dateProvider().endOf('month').date();
 
     return Math.round((endOfMonth * this.amount) / today);
+  }
+  _calculateProjectionRateVsPreviousMonth() {
+    if (this.projected && this.spentPreviousMonth) {
+      return Math.round((this.projected / this.spentPreviousMonth) * 100);
+    }
+    return undefined;
   }
 }
 
