@@ -21,7 +21,7 @@ class AmountSpent {
   }
   _calculateProjectionRateVsPreviousMonth() {
     if (this.projected && this.spentPreviousMonth) {
-      return Math.round((this.projected / this.spentPreviousMonth) * 100);
+      return Math.round((this.projected / this.spentPreviousMonth) * 100) - 100;
     }
     return undefined;
   }

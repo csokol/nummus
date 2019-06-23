@@ -18,11 +18,9 @@ class BudgetEntry extends Component {
       let percentage = this.props.amountSpent.rate;
       if (this.props.amountSpent.rate < 0) {
         className = 'negative-rate';
-        percentage *= -1;
       }
       rate = <span className={className}>({percentage}%)</span>
     }
-    console.log(this.props.amountSpent.rate);
     return <tr>
       <td>{this.props.categoryName}</td>
       <td>
