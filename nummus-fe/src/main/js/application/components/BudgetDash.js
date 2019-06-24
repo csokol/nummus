@@ -14,23 +14,19 @@ class BudgetEntry extends Component {
   render() {
     let rate = '';
     if (this.props.amountSpent.rate) {
-      let className = 'positive-rate';
       let percentage = this.props.amountSpent.rate;
-      if (this.props.amountSpent.rate < 0) {
-        className = 'negative-rate';
-      }
-      rate = <span className={className}>({percentage}%)</span>
+      rate = <span>({percentage}%)</span>
     }
     return <tr>
       <td>{this.props.categoryName}</td>
       <td>
-        €{AmountFormatter.fromCents(this.props.amountSpent.amount).formatted()}
-      </td>
-      <td>
-        €{AmountFormatter.fromCents(this.props.amountSpent.projected).formatted()} {rate}
+        €{AmountFormatter.fromCents(this.props.amountSpent.amount).formatted()} {rate}
       </td>
       <td>
         €{AmountFormatter.fromCents(this.props.amountSpent.spentPreviousMonth).formatted()}
+      </td>
+      <td>
+        €{AmountFormatter.fromCents(this.props.amountSpent.projected).formatted()}
       </td>
     </tr>
   }
@@ -64,8 +60,8 @@ class BudgetDash extends Component {
           <tr className='category-budget'>
             <th>Category</th>
             <th>Total spent</th>
-            <th>Projected</th>
             <th>Previous month</th>
+            <th>Projected</th>
           </tr>
           </thead>
           <tbody>
