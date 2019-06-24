@@ -44,8 +44,9 @@ class AdminDash extends Component {
 
   uploadExpenses() {
     let component = this;
+    debugger;
     let promise = fetch(
-      `${API_ENDPOINT}/sync/${this.userUuid}`,
+      `${API_ENDPOINT}/sync/${this.state.userUuid}`,
       {
         method: 'POST',
         mode: 'cors',
@@ -66,7 +67,7 @@ class AdminDash extends Component {
   downloadExpenses() {
     let component = this;
     let promise = fetch(
-      `${API_ENDPOINT}/sync/${this.userUuid}`,
+      `${API_ENDPOINT}/sync/${this.state.userUuid}`,
       {
         method: 'GET',
         mode: 'cors',
