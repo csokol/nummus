@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import ExpenseRepository from "../../domain/ExpenseRepository";
 
-let API_ENDPOINT = "https://mgdd4jfbph.execute-api.us-east-1.amazonaws.com/prod";
+let API_ENDPOINT = "https://uexaepxzl4.execute-api.us-east-1.amazonaws.com/prod";
 
 class AdminDash extends Component {
   static propTypes = {
@@ -44,14 +44,13 @@ class AdminDash extends Component {
 
   uploadExpenses() {
     let component = this;
-    debugger;
     let promise = fetch(
       `${API_ENDPOINT}/sync/${this.state.userUuid}`,
       {
         method: 'POST',
         mode: 'cors',
         headers: {
-          'x-api-key': this.state.apiKey,
+          'X-Api-Key': this.state.apiKey,
         },
         body: this.state.dump,
       }
@@ -72,7 +71,7 @@ class AdminDash extends Component {
         method: 'GET',
         mode: 'cors',
         headers: {
-          'x-api-key': this.state.apiKey,
+          'X-Api-Key': this.state.apiKey,
         }
       }
     );
