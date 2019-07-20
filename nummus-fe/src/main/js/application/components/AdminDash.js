@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import ExpenseRepository from "../../domain/ExpenseRepository";
 
-let API_ENDPOINT = "https://uexaepxzl4.execute-api.us-east-1.amazonaws.com/prod";
+let API_ENDPOINT = "https://hi6kvr95o9.execute-api.us-east-1.amazonaws.com/prod";
 
 class AdminDash extends Component {
   static propTypes = {
@@ -57,10 +57,15 @@ class AdminDash extends Component {
     );
 
     promise.then(response => response.json())
-      .then(response => component.setState({
-          uploadCompleted: "Upload completed: " + JSON.stringify(response),
-        }
-      ))
+      .then(response => {
+        let rawJson = JSON.stringify(response);
+        component.setState({
+            uploadCompleted: "Upload completed: " + rawJson,
+            dump: rawJson,
+          }
+        );
+        this.props.expenseRepository.loadDump(rawJson);
+      })
   }
 
   downloadExpenses() {
@@ -92,6 +97,20 @@ class AdminDash extends Component {
         <h1>Admin</h1>
 
         <div className="form-group">
+          <button
+            className='expense-form-submit button'
+            onClick={this.uploadExpenses.bind(this)}>
+            Sync expenses
+          </button>
+
+          <div className={this.state.uploadCompleted ? "" : "hide"}>
+            <div className="callout success">
+              <p>{this.state.uploadCompleted}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="form-group">
           <label htmlFor="apiKey">Api key</label>
           <input value={this.state.apiKey}
                  className="form-control"
@@ -109,11 +128,7 @@ class AdminDash extends Component {
                  onChange={this.uuidChanged.bind(this)}/>
         </div>
 
-        <label>
-
-        </label>
         <hr/>
-
         <div className="form-group">
           <label htmlFor="expensesData">Expenses dump</label>
           <textarea
@@ -130,31 +145,6 @@ class AdminDash extends Component {
           Load dump
         </button>
 
-        <hr/>
-        <button
-          className='expense-form-submit button'
-          onClick={this.uploadExpenses.bind(this)}>
-          Upload expenses
-        </button>
-
-        <div className={this.state.uploadCompleted ? "" : "hide"}>
-          <div className="callout success">
-            <p>{this.state.uploadCompleted}</p>
-          </div>
-        </div>
-
-        <hr/>
-        <button
-          className='expense-form-submit button'
-          onClick={this.downloadExpenses.bind(this)}>
-          Download expenses
-        </button>
-
-        <div className={this.state.downloadCompleted ? "" : "hide"}>
-          <div className="callout success">
-            <p>{this.state.downloadCompleted}</p>
-          </div>
-        </div>
       </div>
     );
   }

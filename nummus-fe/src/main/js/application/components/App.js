@@ -63,7 +63,7 @@ class App extends Component {
                   <Link to="/nummus/budget/">Budget</Link>
                 </li>
                 <li>
-                  <Link to="/nummus/">Expense</Link>
+                  <Link to="/nummus/admin">Admin</Link>
                 </li>
                 <li>
                   <MonthSelector budgetRepository={this.budgetRepository} onMonthChanged={this.monthChanged.bind(this)}/>
