@@ -9,11 +9,13 @@ class CategoryRepository {
       { name: 'travel', tags: ["non-essential"] },
       { name: 'dining out', tags: ["non-essential"] },
       { name: 'rent', tags: ["essential"] },
-      { name: 'home expense', tags: ["essential"] },
+      { name: 'utilities', tags: ["essential"] },
       { name: 'sports', tags: ["non-essential"] },
       { name: 'transportation', tags: ["essential"] },
       { name: 'lunch @ work', tags: ["essential"] },
       { name: 'children', tags: ["essential"] },
+      { name: 'clothing', tags: ["non-essential"] },
+      { name: 'unexpected', tags: ["essential"] },
     ].map((category, index) => {
       return new Category(index, category.name, category.tags)
     });
