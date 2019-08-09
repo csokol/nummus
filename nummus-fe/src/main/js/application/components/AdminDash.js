@@ -13,6 +13,7 @@ class AdminDash extends Component {
     super(props);
     this.state = {};
     this.state.dump = this.props.expenseRepository.dump();
+    this.state.loading = false;
     this.state.uploadCompleted = "";
     this.state.apiKey = this.props.expenseRepository.apiKey();
     this.state.userUuid = this.props.expenseRepository.userUuid();
@@ -43,6 +44,9 @@ class AdminDash extends Component {
   }
 
   uploadExpenses() {
+    this.setState({
+      loading: true
+    });
     let component = this;
     let promise = fetch(
       `${API_ENDPOINT}/sync/${this.state.userUuid}`,
@@ -57,15 +61,23 @@ class AdminDash extends Component {
     );
 
     promise.then(response => response.json())
-      .then(response => {
-        let rawJson = JSON.stringify(response);
-        component.setState({
-            uploadCompleted: "Upload completed: " + rawJson,
-            dump: rawJson,
-          }
-        );
-        this.props.expenseRepository.loadDump(rawJson);
-      })
+      .then(
+        response => {
+          let rawJson = JSON.stringify(response);
+          component.setState({
+              uploadCompleted: "Sync completed",
+              dump: rawJson,
+              loading: false
+            }
+          );
+          this.props.expenseRepository.loadDump(rawJson);
+        }, reason => {
+          component.setState({
+              uploadFailed: "Failed to sync. Reason: " + reason,
+              loading: false
+            }
+          );
+        })
   }
 
   downloadExpenses() {
@@ -108,6 +120,14 @@ class AdminDash extends Component {
               <p>{this.state.uploadCompleted}</p>
             </div>
           </div>
+          <div className={this.state.uploadFailed ? "" : "hide"}>
+            <div className="callout alert">
+              <p>{this.state.uploadFailed}</p>
+            </div>
+          </div>
+
+          <div className={this.state.loading ? "lds-dual-ring" : "hide"}/>
+
         </div>
 
         <div className="form-group">
