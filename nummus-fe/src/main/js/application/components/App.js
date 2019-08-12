@@ -8,6 +8,8 @@ import UUIDGenerator from "../../domain/UUIDGenerator";
 import CategoryRepository from "../../domain/CategoryRepository";
 import BudgetRepository from "../../domain/BudgetRepository";
 import ExpenseRepository from "../../domain/ExpenseRepository";
+import SyncService from "../../domain/SyncService";
+import moment from 'moment';
 
 class App extends Component {
 
@@ -19,6 +21,27 @@ class App extends Component {
 
     this.state = {
       selectedMonth: this.budgetRepository.currentMonth()
+    }
+  }
+
+  syncBackendState() {
+    let apiKey = this.expenseRepository.apiKey();
+    let userUuid = this.expenseRepository.userUuid();
+    let thiz = this;
+
+    if (apiKey && userUuid && this.expenseRepository.shouldSync(moment())) {
+
+      new SyncService(apiKey, userUuid)
+        .sync(this.expenseRepository.dump())
+        .then(result => {
+          if (result.success) {
+            thiz.expenseRepository.loadDump(result.dump);
+            thiz.expenseRepository.synced();
+            thiz.setState({
+              selectedMonth: thiz.budgetRepository.currentMonth()
+            });
+          }
+        });
     }
   }
 
@@ -37,6 +60,10 @@ class App extends Component {
       amountSpentByCategory={this.expenseRepository.amountsByCategory(this.state.selectedMonth)}
       selectedMonth={this.state.selectedMonth}
     />
+  }
+
+  componentDidMount() {
+    this.syncBackendState();
   }
 
   makeAdminDash() {
@@ -66,7 +93,8 @@ class App extends Component {
                   <Link to="/nummus/admin">Admin</Link>
                 </li>
                 <li>
-                  <MonthSelector budgetRepository={this.budgetRepository} onMonthChanged={this.monthChanged.bind(this)}/>
+                  <MonthSelector budgetRepository={this.budgetRepository}
+                                 onMonthChanged={this.monthChanged.bind(this)}/>
                 </li>
               </ul>
             </div>

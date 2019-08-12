@@ -1,6 +1,7 @@
 import Expense from "./Expense";
 import UUIDGenerator from "./UUIDGenerator";
 import AmountSpent from "./AmountSpent";
+import moment from 'moment';
 
 const nummusPrefix = "nummus.io";
 const expenseKeysKey = nummusPrefix + ".expenseKeys";
@@ -111,6 +112,26 @@ class ExpenseRepository {
   saveApiKey(apiKey) {
     let key = nummusPrefix + ".apiKey";
     this.localStorage.setItem(key, apiKey);
+  }
+
+  shouldSync(now) {
+    let lastSync = this.localStorage.getItem(nummusPrefix + ".lastSync");
+    if (!lastSync) {
+      return true;
+    }
+    let lastSyncMoment = moment(lastSync, "YYYYMMDDHH");
+
+    let difference = lastSyncMoment.add(1, 'day')
+      .diff(moment(), 'hours');
+
+    return difference < 0;
+  }
+
+  synced() {
+    this.localStorage.setItem(
+      nummusPrefix + ".lastSync",
+      moment().format("YYYYMMDDHH")
+    );
   }
 }
 

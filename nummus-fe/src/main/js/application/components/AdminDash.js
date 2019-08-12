@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import ExpenseRepository from "../../domain/ExpenseRepository";
+import SyncService from "../../domain/SyncService";
 
 let API_ENDPOINT = "https://hi6kvr95o9.execute-api.us-east-1.amazonaws.com/prod";
+
 
 class AdminDash extends Component {
   static propTypes = {
@@ -48,35 +50,28 @@ class AdminDash extends Component {
       loading: true
     });
     let component = this;
-    let promise = fetch(
-      `${API_ENDPOINT}/sync/${this.state.userUuid}`,
-      {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-          'X-Api-Key': this.state.apiKey,
-        },
-        body: this.state.dump,
-      }
-    );
 
-    promise.then(response => response.json())
+    let promise = new SyncService(this.state.apiKey, this.state.userUuid)
+      .sync(this.state.dump);
+
+    promise
       .then(
-        response => {
-          let rawJson = JSON.stringify(response);
-          component.setState({
-              uploadCompleted: "Sync completed",
-              dump: rawJson,
-              loading: false
-            }
-          );
-          this.props.expenseRepository.loadDump(rawJson);
-        }, reason => {
-          component.setState({
-              uploadFailed: "Failed to sync. Reason: " + reason,
-              loading: false
-            }
-          );
+        result => {
+          if (result.success) {
+            component.setState({
+                uploadCompleted: "Sync completed",
+                dump: result.dump,
+                loading: false
+              }
+            );
+            this.props.expenseRepository.loadDump(result.dump);
+          } else {
+            component.setState({
+                uploadFailed: "Failed to sync. Reason: " + result.reason,
+                loading: false
+              }
+            );
+          }
         })
   }
 
