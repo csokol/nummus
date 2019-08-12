@@ -13,6 +13,11 @@ class ExpenseRepository {
   }
 
   list() {
+    return this.listAll()
+      .filter(e => e.deleted !== true);
+  }
+
+  listAll() {
     return this._getExpenseKeys()
       .map(this.localStorage.getItem.bind(this.localStorage))
       .map(JSON.parse)
@@ -34,6 +39,12 @@ class ExpenseRepository {
   }
 
   delete(expense) {
+    let key = `${nummusPrefix}.expenses.${expense.id}`;
+    expense.deleted = true;
+    this.localStorage.setItem(key, JSON.stringify(expense));
+  }
+
+  hardDelete(expense) {
     let key = `${nummusPrefix}.expenses.${expense.id}`;
     let expenseKeys = this._getExpenseKeys();
     this.localStorage.removeItem(key);
@@ -60,11 +71,11 @@ class ExpenseRepository {
   }
 
   dump() {
-    return JSON.stringify(this.list());
+    return JSON.stringify(this.listAll());
   }
 
   loadDump(jsonString) {
-    this.list().forEach(this.delete.bind(this));
+    this.list().forEach(this.hardDelete.bind(this));
     JSON.parse(jsonString)
       .map(Expense.fromJsonObj)
       .forEach(this.add.bind(this));

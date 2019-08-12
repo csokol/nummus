@@ -72,7 +72,7 @@ test('exports expenses in json', () => {
   const jsonString = expenses.dump();
 
   // language=JSON
-  expect(jsonString).toEqual(JSON.stringify(JSON.parse("[\n  {\n    \"id\": 1,\n    \"amountCents\": 100,\n    \"categoryId\": 1,\n    \"date\": {\n      \"day\": 10,\n      \"month\": 1,\n      \"year\": 2018,\n      \"hour\":12,\n      \"minute\":0\n    }\n  },\n  {\n    \"id\": 2,\n    \"amountCents\": 200,\n    \"categoryId\": 1,\n    \"date\": {\n      \"day\": 10,\n      \"month\": 1,\n      \"year\": 2018,\n      \"hour\":12,\n      \"minute\":0\n    }\n  }\n]")));
+  expect(jsonString).toEqual(JSON.stringify(JSON.parse("[\n  {\n    \"id\": 1,\n    \"amountCents\": 100,\n    \"categoryId\": 1,\n    \"deleted\": false,\n    \"date\": {\n      \"day\": 10,\n      \"month\": 1,\n      \"year\": 2018,\n      \"hour\":12,\n      \"minute\":0\n    }\n  },\n  {\n    \"id\": 2,\n    \"amountCents\": 200,\n    \"categoryId\": 1,\n    \"deleted\": false,\n    \"date\": {\n      \"day\": 10,\n      \"month\": 1,\n      \"year\": 2018,\n      \"hour\":12,\n      \"minute\":0\n    }\n  }\n]")));
 });
 
 test('imports json dump', () => {

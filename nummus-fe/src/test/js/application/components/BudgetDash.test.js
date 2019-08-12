@@ -21,27 +21,3 @@ it('renders without crashing', () => {
     />, div);
 });
 
-
-it('shows spent amounts', () => {
-  const div = document.createElement('div');
-  const categoryRepository = new CategoryRepository();
-  const localStorageMock = new LocalStorageMock();
-  const budgetRepository = new BudgetRepository(localStorageMock, categoryRepository);
-  const budget = budgetRepository.currentMonthlyBudget();
-  budget.categoryBudgets[0].budgeted = 1000;
-  budgetRepository.update(budget);
-
-  const amountSpentByCategory = new Map();
-  amountSpentByCategory.set(budget.categoryBudgets[0].categoryId, new AmountSpent(800));
-
-  const testRenderer = TestRenderer.create(
-    <BudgetDash
-      categoryRepository={categoryRepository}
-      amountSpentByCategory={amountSpentByCategory}
-    />
-  );
-  const tableBodyRows = testRenderer.root.findByType('tbody').children[0];
-
-  const spentFirstRow = tableBodyRows.children[0].children[1].props;
-  expect(spentFirstRow.children).toEqual(["€", "08.00"]);
-});

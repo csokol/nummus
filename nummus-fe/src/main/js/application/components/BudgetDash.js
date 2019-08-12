@@ -44,7 +44,6 @@ class BudgetDash extends Component {
     this.categoriesById = this.props.categoryRepository.categoriesById();
     let totalAmountSpent = Array.from(this.categoriesById)
       .map(([id, category]) => {
-        console.log(this._getAmountSpent(id));
         return this._getAmountSpent(id).amount;
       }).reduce((acc, amount) => acc + amount, 0);
     this.totalAmountSpent = AmountFormatter.fromCents(totalAmountSpent).formatted()

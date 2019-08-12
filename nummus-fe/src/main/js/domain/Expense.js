@@ -4,12 +4,13 @@ const decimalSeparator = (1.1).toLocaleString().substring(1, 2);
 
 class Expense {
   constructor(parameters, dateProvider = function() { return moment() }) {
-    const {id, amountCents, categoryId, comment} = parameters;
+    const {id, amountCents, categoryId, comment, deleted} = parameters;
     this.id = id;
     this.amountCents = amountCents;
     this.categoryId = categoryId;
     this.comment = comment;
     const now = dateProvider();
+    this.deleted = deleted || false;
     this.date = {
       day: now.date(),
       month: now.month() + 1,
@@ -52,7 +53,8 @@ class Expense {
       id: obj.id,
       amountCents: obj.amountCents,
       categoryId: obj.categoryId,
-      comment: obj.comment
+      comment: obj.comment,
+      deleted: obj.deleted,
     });
 
     expense.date = obj.date;
