@@ -3,9 +3,6 @@ import PropTypes from 'prop-types';
 import ExpenseRepository from "../../domain/ExpenseRepository";
 import SyncService from "../../domain/SyncService";
 
-let API_ENDPOINT = "https://hi6kvr95o9.execute-api.us-east-1.amazonaws.com/prod";
-
-
 class AdminDash extends Component {
   static propTypes = {
     expenseRepository: PropTypes.instanceOf(ExpenseRepository),
@@ -14,21 +11,10 @@ class AdminDash extends Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.state.dump = this.props.expenseRepository.dump();
     this.state.loading = false;
     this.state.uploadCompleted = "";
     this.state.apiKey = this.props.expenseRepository.apiKey();
     this.state.userUuid = this.props.expenseRepository.userUuid();
-  }
-
-  loadDump() {
-    this.props.expenseRepository.loadDump(this.state.dump);
-  }
-
-  textAreaChanged(event) {
-    this.setState({
-      dump: event.target.value
-    });
   }
 
   apiKeyChanged(event) {
@@ -52,7 +38,7 @@ class AdminDash extends Component {
     let component = this;
 
     let promise = new SyncService(this.state.apiKey, this.state.userUuid)
-      .sync(this.state.dump);
+      .sync(this.props.expenseRepository.dump());
 
     promise
       .then(
@@ -73,29 +59,6 @@ class AdminDash extends Component {
             );
           }
         })
-  }
-
-  downloadExpenses() {
-    let component = this;
-    let promise = fetch(
-      `${API_ENDPOINT}/sync/${this.state.userUuid}`,
-      {
-        method: 'GET',
-        mode: 'cors',
-        headers: {
-          'X-Api-Key': this.state.apiKey,
-        }
-      }
-    );
-
-    promise
-      .then(response => response.json())
-      .then(json => {
-        component.setState({
-          dump: JSON.stringify(json),
-          downloadCompleted: "Download completed",
-        });
-      });
   }
 
   render() {
@@ -144,29 +107,11 @@ class AdminDash extends Component {
         </div>
 
         <hr/>
-        <div className="form-group">
-          <label htmlFor="expensesData">Expenses dump</label>
-          <textarea
-            id="expensesData"
-            value={this.state.dump}
-            className="form-control"
-            onChange={this.textAreaChanged.bind(this)}
-          />
-        </div>
-
-        <button
-          className='expense-form-submit button'
-          onClick={this.loadDump.bind(this)}>
-          Load dump
-        </button>
 
       </div>
     );
   }
 
-  getAmount(categoryBudget) {
-    return this.state.remainingAmounts.get(categoryBudget.categoryId);
-  }
 }
 
 export default AdminDash;
