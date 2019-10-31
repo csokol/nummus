@@ -121,7 +121,7 @@ class ExpenseRepository {
     }
     let lastSyncMoment = moment(lastSync, "YYYYMMDDHH");
 
-    let difference = lastSyncMoment.add(1, 'day')
+    let difference = lastSyncMoment.add(7, 'day')
       .diff(moment(), 'hours');
 
     return difference < 0;
