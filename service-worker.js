@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.0/workbox-sw.js");
 
 importScripts(
-  "/nummus/precache-manifest.4263b5c79ac78d840917c0645730c4de.js"
+  "/nummus/precache-manifest.31ef67b12dc0caa40f16cf75e4df9bc9.js"
 );
 
 self.addEventListener('message', (event) => {
