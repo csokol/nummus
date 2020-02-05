@@ -74,7 +74,7 @@ class ExpenseForm extends Component {
         this.props.onValidationError(validationErrors);
         return;
       }
-      this.setState({amount: null, category: null});
+      this.setState({amount: null, category: null, comment: null});
       this.amountFormatter.clear();
       this._amount.value = this.amountFormatter.formatted();
       this._category.value = null;
