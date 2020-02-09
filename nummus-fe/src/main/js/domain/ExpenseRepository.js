@@ -93,8 +93,7 @@ class ExpenseRepository {
   }
 
   _amountsByCategory(yearMonth) {
-    return this.list()
-      .filter(expense => expense.sameMonth(yearMonth))
+    return this.findBy(yearMonth)
       .reduce((map, expense) => {
         const currentAmount = map.get(expense.categoryId) ? map.get(expense.categoryId) : 0;
         map.set(expense.categoryId, currentAmount + expense.amountCents);
