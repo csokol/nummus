@@ -120,7 +120,8 @@ class ExpenseRepository {
     return ids.map(id => repository.localStorage.getItem(repository.generateKeyById(id)))
       .map(JSON.parse)
       .map(Expense.fromJsonObj)
-      .filter(e => e.deleted !== true);
+      .filter(e => e.deleted !== true)
+      .sort((a, b) => -a.getDateMoment().diff(b.getDateMoment(), 'minutes'));
   }
 
   userUuid() {
