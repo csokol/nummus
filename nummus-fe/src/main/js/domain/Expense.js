@@ -11,6 +11,10 @@ class Expense {
     this.comment = comment;
     const now = dateProvider();
     this.deleted = deleted || false;
+    this.setDate(now);
+  }
+
+  setDate(now) {
     this.date = {
       day: now.date(),
       month: now.month() + 1,
@@ -39,6 +43,10 @@ class Expense {
 
   sameMonth(yearMonth) {
     return this.getDateMoment().format("YYYY_MM") === yearMonth.yearMonth;
+  }
+
+  getYearMonth() {
+    return this.getDateMoment().format("YYYY_MM");
   }
 
   formattedDate() {

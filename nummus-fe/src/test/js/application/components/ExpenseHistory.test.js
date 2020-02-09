@@ -26,21 +26,6 @@ test('shows expenses', () => {
   localStorageMock.clear();
 });
 
-test('shows expense with no date', () => {
-  const expenseRepository = new ExpenseRepository(localStorageMock);
-  const expense = new Expense({id: 2, amountCents: 2000, categoryId: 2});
-  expense.date = undefined;
-  expenseRepository.add(expense);
-  const component = makeComponent(expenseRepository);
-
-  let items = ReactTestUtils.scryRenderedDOMComponentsWithTag(component, 'tr');
-  expect(items).toHaveLength(1);
-  const cell = ReactTestUtils.scryRenderedDOMComponentsWithTag(component, 'td')[1];
-  const domNode = ReactDOM.findDOMNode(cell);
-  expect(domNode.innerHTML).toEqual('€20.00');
-  localStorageMock.clear();
-});
-
 test('deletes expense', () => {
   const expenseRepository = new ExpenseRepository(localStorageMock);
   expenseRepository.add(new Expense({id: 1, amountCents: 1000, categoryId: 1}));

@@ -74,7 +74,6 @@ it('stores expense in localstorage', () => {
   expenseForm.submit();
 
   let keys = Array.from(localStorageMock.store.keys());
-  expect(keys).toHaveLength(3);
   let item = localStorageMock.getItem('nummus.io.expenses.1');
 
   expect(item).toEqual(JSON.stringify(new Expense({

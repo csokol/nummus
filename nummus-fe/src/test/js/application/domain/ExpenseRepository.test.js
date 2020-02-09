@@ -15,18 +15,6 @@ test('stores expenses', () => {
   expect(firstExpense).toEqual(expense);
 });
 
-test('stores expenses with no date', () => {
-  const localStorage = new LocalStorageMock();
-  const expenses = new ExpenseRepository(localStorage);
-  const expense = new Expense({id: 1, amountCents: 100, categoryId: 10});
-  expense.date = undefined;
-  expenses.add(expense);
-
-  expect(expenses.list()).toHaveLength(1);
-  expect(expenses.list()[0]).toEqual(expense);
-  localStorage.clear();
-});
-
 test('aggregates expenses by category', () => {
   const localStorage = new LocalStorageMock();
   const expenses = new ExpenseRepository(localStorage);
@@ -104,4 +92,26 @@ test('finds by month', () => {
 
 
   expect(expenses.findBy(new BudgetRepository.YearMonth("2018_10"))).toHaveLength(2);
+});
+
+test('migrates data to v2', () => {
+  function fixedDateProvider(month = '10') {
+    return () => moment(month+"-01-2018 12:00", "MM-DD-YYYY HH:mm");
+  }
+  const localStorage = new LocalStorageMock();
+  localStorage.setItem("nummus.io.expenseKeys", '["nummus.io.expenses.1", "nummus.io.expenses.2"]');
+  localStorage.setItem('nummus.io.expenses.1', '{"id":1,"amountCents":100,"categoryId":1,"deleted":false,"date":{"day":1,"month":10,"year":2018,"hour":0,"minute":0}}');
+  localStorage.setItem('nummus.io.expenses.2', '{"id":2,"amountCents":101,"categoryId":1,"deleted":false,"date":{"day":1,"month":11,"year":2018,"hour":0,"minute":0}}');
+  const expenses = new ExpenseRepository(localStorage);
+
+  let oct = expenses.findBy(new BudgetRepository.YearMonth("2018_10"));
+  let nov = expenses.findBy(new BudgetRepository.YearMonth("2018_11"));
+
+  expect(localStorage.getItem("v2.nummus.io.months-index.2018_11")).toEqual('[2]');
+  expect(localStorage.getItem("v2.nummus.io.months-index.2018_10")).toEqual('[1]');
+  expect(localStorage.getItem("nummus.io.version")).toEqual('v2');
+  expect(oct).toHaveLength(1);
+  expect(nov).toHaveLength(1);
+  expect(oct[0]).toEqual(new Expense({id: 1, amountCents: 100, categoryId: 1}, fixedDateProvider('10')));
+  expect(nov[0]).toEqual(new Expense({id: 2, amountCents: 101, categoryId: 1}, fixedDateProvider('11')));
 });

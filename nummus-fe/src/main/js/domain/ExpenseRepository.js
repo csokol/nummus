@@ -6,11 +6,20 @@ import moment from 'moment';
 const nummusPrefix = "nummus.io";
 const expenseKeysKey = nummusPrefix + ".expenseKeys";
 
+const currentVersion = "v2";
+
 class ExpenseRepository {
   localStorage;
 
   constructor(localStorage) {
     this.localStorage = localStorage;
+    if (this.needsMigration()) {
+      this.runV2Migration();
+    }
+  }
+
+  needsMigration() {
+    return this.localStorage.getItem(`${nummusPrefix}.version`) !== "v2";
   }
 
   list() {
@@ -22,6 +31,7 @@ class ExpenseRepository {
     return this._getExpenseKeys()
       .map(this.localStorage.getItem.bind(this.localStorage))
       .map(JSON.parse)
+      .filter(o => o != null)
       .map(Expense.fromJsonObj)
       .sort((a, b) => -a.getDateMoment().diff(b.getDateMoment(), 'minutes'));
   }
@@ -32,11 +42,32 @@ class ExpenseRepository {
   }
 
   add(expense) {
-    let key = `${nummusPrefix}.expenses.${expense.id}`;
+    let key = `${this.generateKey(expense)}`;
+    let yearMonth = expense.getYearMonth();
     let expenseKeys = this._getExpenseKeys();
-    this.localStorage.setItem(key, JSON.stringify(expense));
+
+    let items = this._readMonthIndex(yearMonth);
+    let expenseJson = JSON.stringify(expense);
+    items.push(expense.id);
+    this._setMonthIndex(yearMonth, items);
+
+    this.localStorage.setItem(key, expenseJson);
     expenseKeys.push(key);
+
     this.localStorage.setItem(expenseKeysKey, JSON.stringify(expenseKeys));
+  }
+
+  _readMonthIndex(yearMonth) {
+    let index = this.localStorage.getItem(`v2.nummus.io.months-index.${yearMonth}`) || '[]';
+    return JSON.parse(index);
+  }
+
+  generateKey(expense) {
+    return this.generateKeyById(expense.id);
+  }
+
+  generateKeyById(id) {
+    return `${nummusPrefix}.expenses.${id}`;
   }
 
   delete(expense) {
@@ -76,6 +107,7 @@ class ExpenseRepository {
   }
 
   loadDump(jsonString) {
+    this._clearIndices();
     this.list().forEach(this.hardDelete.bind(this));
     JSON.parse(jsonString)
       .map(Expense.fromJsonObj)
@@ -83,12 +115,12 @@ class ExpenseRepository {
   }
 
   findBy(yearMonth) {
-    let yearMonthMoment = yearMonth.toMoment();
-    return this.list()
-      .filter(expense => {
-        let expenseDate = expense.getDateMoment();
-        return expenseDate.month() === yearMonthMoment.month() && expenseDate.year() === yearMonthMoment.year();
-      });
+    let ids = this._readMonthIndex(yearMonth.yearMonth);
+    let repository = this;
+    return ids.map(id => repository.localStorage.getItem(repository.generateKeyById(id)))
+      .map(JSON.parse)
+      .map(Expense.fromJsonObj)
+      .filter(e => e.deleted !== true);
   }
 
   userUuid() {
@@ -132,6 +164,35 @@ class ExpenseRepository {
       nummusPrefix + ".lastSync",
       moment().format("YYYYMMDDHH")
     );
+  }
+
+  runV2Migration() {
+    let expensesByMonth = this.listAll().reduce((acc, item) => {
+      if (!acc[item.getYearMonth()]) {
+        acc[item.getYearMonth()] = [];
+      }
+      acc[item.getYearMonth()].push(item.id);
+      return acc;
+    }, {});
+
+    for (let [month, expenses] of Object.entries(expensesByMonth)) {
+      this._setMonthIndex(month, expenses);
+    }
+    this.localStorage.setItem(`${nummusPrefix}.version`, "v2");
+  }
+
+  _setMonthIndex(month, expenseIds) {
+    this.localStorage.setItem(ExpenseRepository._monthIndex(month), JSON.stringify(expenseIds));
+  }
+
+  static _monthIndex(month) {
+    return `v2.nummus.io.months-index.${month}`;
+  }
+
+  _clearIndices() {
+    let repository = this;
+    new Set(this.list().map(e => e.getYearMonth()))
+      .forEach(month => repository.localStorage.removeItem(ExpenseRepository._monthIndex(month)));
   }
 }
 

@@ -151,7 +151,7 @@ it('clears form after submit', () => {
   formControl.setCategory('1');
   formControl.submit();
 
-  expect(component.state).toEqual({amount: null, category: null});
+  expect(component.state).toEqual({amount: null, category: null, comment: null});
   expect(component._category.value).toEqual('0');
   expect(component._amount.value).toEqual('00.00');
 });
