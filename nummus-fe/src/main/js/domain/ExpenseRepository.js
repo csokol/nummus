@@ -117,6 +117,7 @@ class ExpenseRepository {
     let ids = this._readMonthIndex(yearMonth.yearMonth);
     let repository = this;
     return ids.map(id => repository.localStorage.getItem(repository.generateKeyById(id)))
+      .filter(e => e != null)
       .map(JSON.parse)
       .map(Expense.fromJsonObj)
       .filter(e => e.deleted !== true)
