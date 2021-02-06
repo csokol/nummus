@@ -16,6 +16,7 @@ class CategoryRepository {
       { name: 'children', tags: ["essential"] },
       { name: 'clothing', tags: ["non-essential"] },
       { name: 'unexpected', tags: ["essential"] },
+      { name: 'coffee', tags: ["non-essential"] },
     ].map((category, index) => {
       return new Category(index, category.name, category.tags)
     });
