@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "ff43001536c2b77298ab75691d82c12c",
+    "revision": "ea1edf8c6579e3e1cf6d2fb9d4642ddc",
     "url": "/nummus/index.html"
   },
   {
-    "revision": "46246251b570a8c30b60",
+    "revision": "88484fd6893126a06f7e",
     "url": "/nummus/static/css/main.6f0c3218.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/nummus/static/js/2.161c4d39.chunk.js"
   },
   {
-    "revision": "46246251b570a8c30b60",
-    "url": "/nummus/static/js/main.cf50c936.chunk.js"
+    "revision": "88484fd6893126a06f7e",
+    "url": "/nummus/static/js/main.f55ab083.chunk.js"
   },
   {
     "revision": "bbbaea70b4959c2c489c",
