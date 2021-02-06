@@ -20,8 +20,16 @@ class SyncService {
       }
     ).then(response => response.json())
       .then(response => {
+          if (Array.isArray(response)) {
+            let jsonResponse = JSON.stringify(response);
+            return {
+              dump: jsonResponse,
+              success: true
+            };
+          }
+
           return {
-            dump: JSON.stringify(response),
+            dump: JSON.stringify(response.allExpenses),
             success: true
           };
         }, reason => {
