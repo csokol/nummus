@@ -50,7 +50,15 @@ class AdminDash extends Component {
                 loading: false
               }
             );
-            this.props.expenseRepository.loadDump(result.dump);
+            if (result.deletedExpenses) {
+              this.props.expenseRepository.deleteKeys(result.deletedExpenses);
+            }
+            if (result.newExpenses) {
+              this.props.expenseRepository.addExpenses(result.newExpenses);
+            }
+            if (result.dump && !result.newExpenses && !result.deletedExpenses) {
+              this.props.expenseRepository.loadDump(result.dump);
+            }
           } else {
             component.setState({
                 uploadFailed: "Failed to sync. Reason: " + result.reason,

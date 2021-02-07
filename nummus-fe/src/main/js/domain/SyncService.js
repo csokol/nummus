@@ -30,6 +30,8 @@ class SyncService {
 
           return {
             dump: JSON.stringify(response.allExpenses),
+            deletedExpenses: JSON.stringify(response.deletedExpenses),
+            newExpenses: JSON.stringify(response.newExpenses),
             success: true
           };
         }, reason => {

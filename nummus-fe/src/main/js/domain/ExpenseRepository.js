@@ -41,20 +41,33 @@ class ExpenseRepository {
     return JSON.parse(arrayJson);
   }
 
-  add(expense) {
-    let key = `${this.generateKey(expense)}`;
-    let yearMonth = expense.getYearMonth();
-    let expenseKeys = this._getExpenseKeys();
+  addRawExpenses(expenses) {
+    var expenseObjects = expenses.map(Expense.fromJsonObj);
+    expenseObjects.forEach(this.add.bind(this))
+  }
 
+  add(expense) {
+    let key = this.save(expense);
+
+    let yearMonth = expense.getYearMonth();
     let items = this._readMonthIndex(yearMonth);
-    let expenseJson = JSON.stringify(expense);
+
+    items = items.filter(savedKey => savedKey !== expense.id);
     items.push(expense.id);
     this._setMonthIndex(yearMonth, items);
 
-    this.localStorage.setItem(key, expenseJson);
+    let expenseKeys = this._getExpenseKeys();
+    expenseKeys = expenseKeys.filter(savedKey => savedKey !== key);
     expenseKeys.push(key);
-
     this.localStorage.setItem(expenseKeysKey, JSON.stringify(expenseKeys));
+  }
+
+  save(expense) {
+    let key = `${this.generateKey(expense)}`;
+    let expenseJson = JSON.stringify(expense);
+
+    this.localStorage.setItem(key, expenseJson);
+    return key;
   }
 
   _readMonthIndex(yearMonth) {
@@ -103,6 +116,20 @@ class ExpenseRepository {
 
   dump() {
     return JSON.stringify(this.listAll());
+  }
+
+  deleteKeys(expenseIds) {
+    let expenseKeys = this._getExpenseKeys();
+    for (let index in expenseIds) {
+      let key = `${nummusPrefix}.expenses.${expenseIds[index]}`;
+      this.localStorage.removeItem(key);
+      expenseKeys = expenseKeys.filter(savedKey => savedKey !== key);
+    }
+    this.localStorage.setItem(expenseKeysKey, JSON.stringify(expenseKeys));
+  }
+
+  addExpenses() {
+
   }
 
   loadDump(jsonString) {

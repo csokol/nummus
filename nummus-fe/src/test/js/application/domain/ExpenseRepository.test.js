@@ -15,12 +15,89 @@ test('stores expenses', () => {
   expect(firstExpense).toEqual(expense);
 });
 
+function oct2018() {
+  return moment("01-10-2018 12", "DD-MM-YYYY hh");
+}
+
+function nov2018() {
+  return moment("01-11-2018 12", "DD-MM-YYYY hh");
+}
+
+function dec2018() {
+  return moment("01-12-2018 12", "DD-MM-YYYY hh");
+}
+
+test('stores multiple expenses', () => {
+  const localStorage = new LocalStorageMock();
+  const expenses = new ExpenseRepository(localStorage);
+
+  const expense1 = {
+    "id": "1",
+    "amountCents": 100,
+    "categoryId": 1,
+    "deleted": false,
+    "date": {
+      "day": 1,
+      "month": 10,
+      "year": 2018,
+      "hour": 0,
+      "minute": 0
+    }
+  };
+
+  const expense2 = {
+    "id": "2",
+    "amountCents": 100,
+    "categoryId": 2,
+    "deleted": false,
+    "date": {
+      "day": 1,
+      "month": 11,
+      "year": 2018,
+      "hour": 0,
+      "minute": 0
+    }
+  };
+
+  const expense3 = {
+    "id": "3",
+    "amountCents": 100,
+    "categoryId": 3,
+    "deleted": false,
+    "date": {
+      "day": 1,
+      "month": 12,
+      "year": 2018,
+      "hour": 0,
+      "minute": 0
+    }
+  };
+
+  const expense1Object = new Expense({id: "1", amountCents: 100, categoryId: 1}, oct2018);
+  const expense2Object = new Expense({id: "2", amountCents: 100, categoryId: 2}, nov2018);
+  const expense3Object = new Expense({id: "3", amountCents: 100, categoryId: 3}, dec2018);
+
+  expenses.add(expense3Object);
+  expenses.addRawExpenses([expense1, expense2, expense3]);
+  let allExpenses = expenses.list();
+
+  expect(allExpenses).toHaveLength(3);
+  expect(allExpenses[0]).toEqual(expense3Object);
+  expect(allExpenses[1]).toEqual(expense2Object);
+  expect(allExpenses[2]).toEqual(expense1Object);
+
+  expect(expenses.findBy(new BudgetRepository.YearMonth("2018_10"))).toHaveLength(1);
+  expect(expenses.findBy(new BudgetRepository.YearMonth("2018_11"))).toHaveLength(1);
+  expect(expenses.findBy(new BudgetRepository.YearMonth("2018_12"))).toHaveLength(1);
+});
+
 test('aggregates expenses by category', () => {
   const localStorage = new LocalStorageMock();
   const expenses = new ExpenseRepository(localStorage);
   function oct2018() {
     return moment("01-10-2018", "DD-MM-YYYY");
   }
+
   function nov2018() {
     return moment("01-11-2018", "DD-MM-YYYY");
   }
@@ -45,6 +122,26 @@ test('aggregates expenses by category', () => {
   expect(amountsByCategory.get(3).spentPreviousMonth).toEqual(250);
 });
 
+test('deletes multiple keys', () => {
+  const localStorage = new LocalStorageMock();
+  const expenses = new ExpenseRepository(localStorage);
+  const expense = new Expense({id: 3, amountCents: 300, categoryId: 10});
+
+  function fixedDateProvider() {
+    return moment("01-10-2018", "MM-DD-YYYY");
+  }
+
+  expenses.add(new Expense({id: 1, amountCents: 100, categoryId: 1}, fixedDateProvider));
+  expenses.add(new Expense({id: 2, amountCents: 200, categoryId: 1}, fixedDateProvider));
+
+  expenses.add(expense);
+
+  expenses.deleteKeys([1, 2]);
+  let firstExpense = expenses.list()[0];
+
+  expect(firstExpense).toEqual(expense);
+  expect(expenses.list().length).toEqual(1);
+})
 
 test('exports expenses in json', () => {
   const localStorage = new LocalStorageMock();
@@ -71,7 +168,34 @@ test('imports json dump', () => {
   }
 
   // language=JSON
-  let json = "[\n  {\n    \"id\": 1,\n    \"amountCents\": 100,\n    \"categoryId\": 1,\n    \"date\": {\n      \"day\": 10,\n      \"month\": 1,\n      \"year\": 2018,\n      \"hour\":0,\n      \"minute\":0\n    }\n  },\n  {\n    \"id\": 2,\n    \"amountCents\": 200,\n    \"categoryId\": 1,\n    \"date\": {\n      \"day\": 10,\n      \"month\": 1,\n      \"year\": 2018,\n      \"hour\":0,\n      \"minute\":0\n    }\n  }\n]";
+  let json = `
+    [
+      {
+        "id": 1,
+        "amountCents": 100,
+        "categoryId": 1,
+        "date": {
+          "day": 10,
+          "month": 1,
+          "year": 2018,
+          "hour": 0,
+          "minute": 0
+        }
+      },
+      {
+        "id": 2,
+        "amountCents": 200,
+        "categoryId": 1,
+        "date": {
+          "day": 10,
+          "month": 1,
+          "year": 2018,
+          "hour": 0,
+          "minute": 0
+        }
+      }
+    ]
+  `;
   expenses.add(new Expense({id: 3, amountCents: 100, categoryId: 1}, fixedDateProvider));
 
   expenses.loadDump(json);
