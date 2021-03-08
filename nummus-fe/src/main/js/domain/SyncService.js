@@ -1,4 +1,4 @@
-let API_ENDPOINT = "https://t2zbab4l06.execute-api.eu-central-1.amazonaws.com/Prod";
+let API_ENDPOINT = "https://g5kzj2wfw2.execute-api.eu-central-1.amazonaws.com/prod";
 
 class SyncService {
 
