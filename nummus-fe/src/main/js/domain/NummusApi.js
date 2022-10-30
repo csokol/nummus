@@ -1,5 +1,5 @@
-// const API_ENDPOINT = "https://nummus-v2.fly.dev";
-const API_ENDPOINT = "http://localhost:8080";
+const API_ENDPOINT = "https://nummus-v2.fly.dev";
+// const API_ENDPOINT = "http://localhost:8080";
 
 class NummusApi {
 
