@@ -51,7 +51,11 @@ class ExpenseRepository {
   add(expense) {
     let key = this.save(expense);
     this.nummusApi.save(expense)
-      .then(() => console.log("saved!"));
+      .then((expense) => {
+        console.log("saved!")
+        console.log(expense);
+      });
+    this.listExpensesSinceLastSync();
 
     let yearMonth = expense.getYearMonth();
     let items = this._readMonthIndex(yearMonth);
@@ -64,6 +68,18 @@ class ExpenseRepository {
     expenseKeys = expenseKeys.filter(savedKey => savedKey !== key);
     expenseKeys.push(key);
     this.localStorage.setItem(expenseKeysKey, JSON.stringify(expenseKeys));
+  }
+
+  listExpensesSinceLastSync() {
+    let lastSync = this.localStorage.getItem(nummusPrefix + ".lastSyncV2");
+    lastSync = lastSync ? moment(lastSync, "YYYYMMDDHH") : moment().subtract(1, 'years');
+    this.nummusApi
+      .list(lastSync)
+      .then((response) => console.log(response))
+      .then(() => this.localStorage.setItem(
+        nummusPrefix + ".lastSyncV2",
+        moment().format("YYYYMMDDHH")
+      ));
   }
 
   save(expense) {
@@ -194,6 +210,13 @@ class ExpenseRepository {
   synced() {
     this.localStorage.setItem(
       nummusPrefix + ".lastSync",
+      moment().format("YYYYMMDDHH")
+    );
+  }
+
+  syncedV2() {
+    this.localStorage.setItem(
+      nummusPrefix + ".lastSyncV2",
       moment().format("YYYYMMDDHH")
     );
   }

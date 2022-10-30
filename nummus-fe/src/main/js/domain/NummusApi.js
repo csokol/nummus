@@ -20,18 +20,20 @@ class NummusApi {
           'Content-Type': 'application/json',
         },
       }
+    ).then(response => response.json());
+  }
+
+  list(lastSyncMoment) {
+    return fetch(
+      `${API_ENDPOINT}/expenses?createdAfter=${lastSyncMoment.valueOf()}`,
+      {
+        method: 'GET',
+        headers: {
+          'X-Nummus-User-Uuid': this._userUuid,
+          'Accept': 'application/json',
+        },
+      }
     ).then(response => response.json())
-      .then(response => {
-          return {
-            success: true
-          };
-        }, reason => {
-          return {
-            success: false,
-            reason: reason
-          }
-        }
-      );
   }
 }
 
