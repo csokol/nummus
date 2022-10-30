@@ -1,6 +1,7 @@
 import Expense from "./Expense";
 import UUIDGenerator from "./UUIDGenerator";
 import AmountSpent from "./AmountSpent";
+import NummusApi from "./NummusApi";
 import moment from 'moment';
 
 const nummusPrefix = "nummus.io";
@@ -13,6 +14,7 @@ class ExpenseRepository {
 
   constructor(localStorage) {
     this.localStorage = localStorage;
+    this.nummusApi = new NummusApi(this.userUuid());
     if (this.needsMigration()) {
       this.runV2Migration();
     }
@@ -48,6 +50,8 @@ class ExpenseRepository {
 
   add(expense) {
     let key = this.save(expense);
+    this.nummusApi.save(expense)
+      .then(() => console.log("saved!"));
 
     let yearMonth = expense.getYearMonth();
     let items = this._readMonthIndex(yearMonth);
